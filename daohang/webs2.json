@@ -1,128 +1,135 @@
 [
-    
     {
         "name": "Github",
         "icon": "./icons/github.svg",
+        "alt": "Github",
         "url": "https://www.github.com",
         "backgroundColor": "#1DA1F2"
     },
     {
         "name": "ChatGPT",
         "icon": "./icons/chatGPT.webp",
+        "alt": "GPT",
         "url": "https://www.chatgpt.com",
         "backgroundColor": "black"
     },
     {
         "name": "YouTube",
         "icon": "./icons/youtube.svg",
+        "alt": "Tube",
         "url": "https://www.youtube.com/howyoutubeworks/resources/brand-resources/#logos-icons-and-colors",
         "backgroundColor": "#FF0000"
     },
     {
         "name": "X",
         "icon": "./icons/x.com.svg",
+        "alt": "X",
         "url": "https://x.com",
         "backgroundColor": "#000000"
     },
     {
         "name": "Telegram",
         "icon": "./icons/telegram.svg",
+        "alt": "Tg",
         "url": "https://telegram.org/tour/screenshots",
         "backgroundColor": "#26A5E4"
     },
     {
         "name": "Google",
         "icon": "https://files.codelife.cc/icons/google.svg",
+        "alt": "Google",
         "url": "https://www.google.com",
         "backgroundColor": "#ffffff"
     },
     {
         "name": "Gmail",
         "icon": "./icons/gmail.svg",
+        "alt": "Gmail",
         "url": "https://fonts.gstatic.com/s/i/productlogos/gmail_2020q4/v8/192px.svg",
         "backgroundColor": "#EA4335"
     },
     {
         "name": "Steam",
         "icon": "./icons/steam.svg",
+        "alt": "Steam",
         "url": "https://partner.steamgames.com/doc/marketing/branding",
         "backgroundColor": "#000000"
     },
-
     {
         "name": "Netlify",
         "icon": "./icons/netlify.svg",
+        "alt": "Netlify",
         "url": "https://www.netlify.com/press/",
         "backgroundColor": "#00C7B7"
     },
     {
         "name": "Bitwarden",
         "icon": "./icons/bitwarden.svg",
+        "alt": "Bitwar",
         "url": "https://bitwarden.com/brand",
         "backgroundColor": "#175DDC"
     },
     {
         "name": "Obsidian",
         "icon": "./icons/obsidian.svg",
+        "alt": "Obsi",
         "url": "https://obsidian.md",
         "backgroundColor": "#7C3AED"
     },
     {
         "name": "Reddit",
         "icon": "./icons/reddit.svg",
+        "alt": "Reddit",
         "url": "https://www.redditinc.com/brand",
         "backgroundColor": "#FF4500"
     },
     {
         "name": "Claude",
         "icon": "./icons/claude.svg",
+        "alt": "Claude",
         "url": "https://claude.ai",
         "backgroundColor": "#D97757"
     },
     {
         "name": "Jupyter",
         "icon": "./icons/jupyter.svg",
+        "alt": "Jupyter",
         "url": "https://github.com/jupyter/design/blob/80716ee75dd7b2a6ec6abcd89922d020483589b1/logos/Logo%20Mark/logomark-whitebody-whitemoons/logomark-whitebody-whitemoons.svg",
         "backgroundColor": "#F37626"
     },
-
-    
     {
         "name": "1diary",
         "icon": "https://files.codelife.cc/icons/diary.svg",
+        "alt": "1diary",
         "url": "#",
         "backgroundColor": "#FF69B4"
     },
     {
-        "name": "数字",
-        "icon": "https://files.codelife.cc/icons/number.svg",
-        "url": "#",
-        "backgroundColor": "#1E90FF"
-    },
-    {
         "name": "RackNerd",
         "icon": "https://files.codelife.cc/icons/racknerd.svg",
+        "alt": "Rack",
         "url": "https://www.racknerd.com",
         "backgroundColor": "#8A2BE2"
     },
     {
         "name": "Control Panel",
         "icon": "https://files.codelife.cc/icons/cpanel.svg",
+        "alt": "Panel",
         "url": "#",
         "backgroundColor": "#0066CC"
     },
     {
         "name": "mars",
         "icon": "https://files.codelife.cc/icons/mars.svg",
+        "alt": "mars",
         "url": "#",
         "backgroundColor": "#CD5C5C"
     },
     {
         "name": "poe",
         "icon": "https://files.codelife.cc/icons/poe.svg",
+        "alt": "POE",
         "url": "https://poe.com",
         "backgroundColor": "#5865F2"
     }
-
-
 ]

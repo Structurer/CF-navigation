@@ -2,169 +2,189 @@
     {
         "name": "豆包",
         "icon": "./icons/doubao.com.webp",
+        "alt": "豆包",
         "url": "https://www.doubao.com",
         "backgroundColor": "#FF5000"
     },
     {
         "name": "Bilibili",
         "icon": "./icons/bilibili.svg",
+        "alt": "Bilibili",
         "url": "https://www.bilibili.com",
         "backgroundColor": "#00A1D6"
     },
     {
         "name": "Notion",
         "icon": "./icons/notion.svg",
+        "alt": "Notion",
         "url": "https://www.notion.so",
         "backgroundColor": "#FFFFFF"
     },
     {
         "name": "网易云音乐",
         "icon": "./icons/music163.svg",
+        "alt": "网易云",
         "url": "https://music.163.com",
         "backgroundColor": "#D43C33"
     },
     {
         "name": "豆瓣",
         "icon": "./icons/douban.svg",
+        "alt": "豆瓣",
         "url": "https://www.douban.com",
         "backgroundColor": "#3b5998"
     },
     {
         "name": "163邮箱",
         "icon": "./icons/mail-163.svg",
+        "alt": "163邮箱",
         "url": "https://mail.163.com",
         "backgroundColor": "#1DA1F2"
     },
     {
         "name": "Outlook",
         "icon": "./icons/outlook.svg",
+        "alt": "Outlook",
         "url": "https://outlook.live.com",
         "backgroundColor": "#FFFFFF"
     },
     {
+        "name": "Cloudflare",
+        "icon": "./icons/cloudfare.webp",
+        "alt": "Cloudflare",
+        "url": "https://www.cloudflare.com",
+        "backgroundColor": "#F38020"
+    },
+    {
         "name": "菜鸟教程",
         "icon": "./icons/runoob.svg",
+        "alt": "菜鸟",
         "url": "https://www.runoob.com",
         "backgroundColor": "#5CB85C"
     },
     {
         "name": "知乎",
         "icon": "./icons/zhihu.svg",
+        "alt": "知乎",
         "url": "https://www.zhihu.com",
         "backgroundColor": "#1DA1F2"
     },
     {
         "name": "微信读书",
         "icon": "./icons/weread-qq.svg",
+        "alt": "读书",
         "url": "https://weread.qq.com",
         "backgroundColor": "#2DC36A"
     },
     {
         "name": "有道翻译",
         "icon": "./icons/youdao.svg",
+        "alt": "翻译",
         "url": "https://fanyi.youdao.com",
         "backgroundColor": "#E83015"
     },
     {
         "name": "MDN",
         "icon": "./icons/mdn-web-docs.svg",
+        "alt": "MDN",
         "url": "https://developer.mozilla.org",
         "backgroundColor": "#20123A"
-    },    
+    },
     {
         "name": "iCloud",
         "icon": "./icons/icloud.webp",
+        "alt": "iCloud",
         "url": "https://www.icloud.com",
         "backgroundColor": "#0071E3"
     },
-    
     {
         "name": "w3school",
         "icon": "./icons/w3school.svg",
+        "alt": "w3s",
         "url": "https://www.w3school.com.cn",
         "backgroundColor": "#04AA6D"
     },
     {
         "name": "番茄小说网",
         "icon": "./icons/tomato-novel.svg",
+        "alt": "番茄",
         "url": "https://fanqienovel.com",
         "backgroundColor": "#FF2D55"
     },
     {
         "name": "阿里云盘",
         "icon": "./icons/alicloud-drive.svg",
+        "alt": "阿里盘",
         "url": "https://www.aliyundrive.com",
         "backgroundColor": "#2395F1"
     },
     {
         "name": "百度云",
         "icon": "./icons/baiduyun.svg",
+        "alt": "百度云",
         "url": "https://pan.baidu.com",
         "backgroundColor": "#216CE7"
     },
     {
         "name": "MindMaster",
         "icon": "./icons/mindmaster.svg",
+        "alt": "Mind",
         "url": "https://www.edrawsoft.cn/mindmaster",
         "backgroundColor": "#4E82FF"
     },
     {
         "name": "道客巴巴",
         "icon": "./icons/daoke88.svg",
+        "alt": "道客",
         "url": "https://www.doc88.com",
         "backgroundColor": "#E83015"
     },
     {
         "name": "中国大学MOOC",
         "icon": "./icons/icourse163.svg",
+        "alt": "MOOC",
         "url": "https://www.icourse163.org",
         "backgroundColor": "#5C8BFF"
     },
     {
         "name": "有道学术",
         "icon": "./icons/youdao-academic.svg",
+        "alt": "有道",
         "url": "https://xueshu.youdao.com",
         "backgroundColor": "#E83015"
     },
     {
-        "name": "Cloudflare",
-        "icon": "./cloudflare.svg",
-        "url": "https://www.cloudflare.com",
-        "backgroundColor": "#F38020"
-    },
-    {
         "name": "中国知网",
         "icon": "./icons/cnki.svg",
+        "alt": "知网",
         "url": "https://www.cnki.net",
         "backgroundColor": "#2F6EDE"
     },
     {
-        "name": "neat-reader",
-        "icon": "./icons/neat-reader.svg",
-        "url": "https://www.neat-reader.cn",
-        "backgroundColor": "#1E90FF"
-    },
-    {
         "name": "OneDrive",
         "icon": "./icons/onedrive.svg",
+        "alt": "Drive",
         "url": "https://onedrive.live.com",
         "backgroundColor": "#0078D4"
     },
     {
         "name": "测速网",
         "icon": "./icons/speedtest.svg",
+        "alt": "测速",
         "url": "https://www.speedtest.cn",
         "backgroundColor": "#00BFFF"
     },
     {
         "name": "备忘录",
         "icon": "./icons/notes.svg",
+        "alt": "备忘录",
         "url": "#",
         "backgroundColor": "#FFA500"
     },
     {
         "name": "wo邮箱",
         "icon": "./icons/wo-email.svg",
+        "alt": "wo",
         "url": "https://mail.wo.cn",
         "backgroundColor": "#FF8C00"
     }
