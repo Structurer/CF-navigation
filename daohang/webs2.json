@@ -1,0 +1,128 @@
+[
+    
+    {
+        "name": "Github",
+        "icon": "./icons/github.svg",
+        "url": "https://www.github.com",
+        "backgroundColor": "#1DA1F2"
+    },
+    {
+        "name": "ChatGPT",
+        "icon": "./icons/chatGPT.webp",
+        "url": "https://www.chatgpt.com",
+        "backgroundColor": "black"
+    },
+    {
+        "name": "YouTube",
+        "icon": "./icons/youtube.svg",
+        "url": "https://www.youtube.com/howyoutubeworks/resources/brand-resources/#logos-icons-and-colors",
+        "backgroundColor": "#FF0000"
+    },
+    {
+        "name": "X",
+        "icon": "./icons/x.com.svg",
+        "url": "https://x.com",
+        "backgroundColor": "#000000"
+    },
+    {
+        "name": "Telegram",
+        "icon": "./icons/telegram.svg",
+        "url": "https://telegram.org/tour/screenshots",
+        "backgroundColor": "#26A5E4"
+    },
+    {
+        "name": "Google",
+        "icon": "https://files.codelife.cc/icons/google.svg",
+        "url": "https://www.google.com",
+        "backgroundColor": "#ffffff"
+    },
+    {
+        "name": "Gmail",
+        "icon": "./icons/gmail.svg",
+        "url": "https://fonts.gstatic.com/s/i/productlogos/gmail_2020q4/v8/192px.svg",
+        "backgroundColor": "#EA4335"
+    },
+    {
+        "name": "Steam",
+        "icon": "./icons/steam.svg",
+        "url": "https://partner.steamgames.com/doc/marketing/branding",
+        "backgroundColor": "#000000"
+    },
+
+    {
+        "name": "Netlify",
+        "icon": "./icons/netlify.svg",
+        "url": "https://www.netlify.com/press/",
+        "backgroundColor": "#00C7B7"
+    },
+    {
+        "name": "Bitwarden",
+        "icon": "./icons/bitwarden.svg",
+        "url": "https://bitwarden.com/brand",
+        "backgroundColor": "#175DDC"
+    },
+    {
+        "name": "Obsidian",
+        "icon": "./icons/obsidian.svg",
+        "url": "https://obsidian.md",
+        "backgroundColor": "#7C3AED"
+    },
+    {
+        "name": "Reddit",
+        "icon": "./icons/reddit.svg",
+        "url": "https://www.redditinc.com/brand",
+        "backgroundColor": "#FF4500"
+    },
+    {
+        "name": "Claude",
+        "icon": "./icons/claude.svg",
+        "url": "https://claude.ai",
+        "backgroundColor": "#D97757"
+    },
+    {
+        "name": "Jupyter",
+        "icon": "./icons/jupyter.svg",
+        "url": "https://github.com/jupyter/design/blob/80716ee75dd7b2a6ec6abcd89922d020483589b1/logos/Logo%20Mark/logomark-whitebody-whitemoons/logomark-whitebody-whitemoons.svg",
+        "backgroundColor": "#F37626"
+    },
+
+    
+    {
+        "name": "1diary",
+        "icon": "https://files.codelife.cc/icons/diary.svg",
+        "url": "#",
+        "backgroundColor": "#FF69B4"
+    },
+    {
+        "name": "数字",
+        "icon": "https://files.codelife.cc/icons/number.svg",
+        "url": "#",
+        "backgroundColor": "#1E90FF"
+    },
+    {
+        "name": "RackNerd",
+        "icon": "https://files.codelife.cc/icons/racknerd.svg",
+        "url": "https://www.racknerd.com",
+        "backgroundColor": "#8A2BE2"
+    },
+    {
+        "name": "Control Panel",
+        "icon": "https://files.codelife.cc/icons/cpanel.svg",
+        "url": "#",
+        "backgroundColor": "#0066CC"
+    },
+    {
+        "name": "mars",
+        "icon": "https://files.codelife.cc/icons/mars.svg",
+        "url": "#",
+        "backgroundColor": "#CD5C5C"
+    },
+    {
+        "name": "poe",
+        "icon": "https://files.codelife.cc/icons/poe.svg",
+        "url": "https://poe.com",
+        "backgroundColor": "#5865F2"
+    }
+
+
+]
