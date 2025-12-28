@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>带有搜索功能的上下布局页面（方案1：清透天蓝色）</title>
+    <style>
+        /* 整体页面样式 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        /* 容器统一管理布局 */
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 上部分样式 ✅ 方案1：清透天蓝色渐变 核心配色 */
+        .top-section {
+            background: linear-gradient(135deg, #b9e0ff 0%, #9fcfff 100%);
+            height: 25vh;
+            min-height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 8px;
+            border-radius: 0px 50px 50px 0px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            transition: transform 0.6s, box-shadow 0.6s;
+        }
+
+        .search-bar:hover {
+            transform: scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Google搜索按钮样式 */
+        .google-button {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #dadce0;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .google-button:hover {
+            background-color: #f1f3f4;
+            border-color: #d1d5db;
+        }
+
+        input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        /* ✅ 方案1：输入框聚焦色 匹配按钮，视觉统一 */
+        input:focus {
+            outline: none;
+            border-color: #7fc4ff;
+            box-shadow: 0 0 0 2px rgba(127, 196, 255, 0.2);
+        }
+
+        /* 百度搜索按钮样式 ✅ 方案1：主色+hover色 清透天蓝 */
+        .baidu-button {
+            background: #7fc4ff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .baidu-button:hover {
+            background: #6bbfff;
+        }
+
+        /* 下部分样式 ✅ 方案1：下部浅天蓝色 无缝衔接 */
+        .bottom-section {
+            background-color: #ebf7ff;
+            padding-top: 30px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* 图标容器：grid布局 */
+        #icon-container {  
+            display: grid;
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            margin: 0 30px 30px;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-auto-rows: auto;
+            gap: 25px;
+            justify-items: center;
+        }
+
+        /* 图标容器（包含文字） */
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            width: 80px;
+            gap: 8px;
+        }
+
+        .icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+        }
+
+        .icon img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 18px;
+        }
+
+        /* 图标文字说明 */
+        .icon-name {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="top-section">
+            <div class="search-bar">
+                <button id="googleButton" class="google-button">Go</button>
+                <input type="text" id="searchInput" placeholder="请输入搜索内容" autocomplete="off">
+                <button id="baidusearchButton" class="baidu-button">搜索</button>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div id="icon-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // 获取页面中的按钮和搜索输入框元素
+        const baiduButton = document.getElementById('baidusearchButton');
+        const googleButton = document.getElementById('googleButton');
+        const searchInput = document.getElementById('searchInput');
+
+        // 执行搜索跳转
+        function performSearch(searchUrlPrefix, searchText) {
+            if (searchText.trim() !== '') {
+                const searchUrl = `${searchUrlPrefix}${encodeURIComponent(searchText)}`;
+                window.location.href = searchUrl;
+            }
+        }
+
+        // 添加事件监听器
+        baiduButton.addEventListener('click', () => {
+            performSearch('https://www.baidu.com/s?wd=', searchInput.value);
+        });
+
+        googleButton.addEventListener('click', () => {
+            performSearch('https://www.google.com/search?q=', searchInput.value);
+        });
+
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                performSearch('https://www.baidu.com/s?wd=', searchInput.value);
+            }
+        });
+    </script>
+
+    <script>
+        // 图标数据结构
+        const icons = [
+            {
+                name: "Github",
+                icon: "https://files.codelife.cc/website/github.svg",
+                url: "https://www.github.com",
+                backgroundColor: "#1DA1F2"
+            },
+            {
+                name: "Bilibili",
+                icon: "https://files.codelife.cc/website/bilibili2.svg",
+                url: "https://www.bilibili.com",
+                backgroundColor: "#00A1D6"
+            },
+            {
+                name: "豆包",
+                icon: "https://files.codelife.cc/icons/doubao.com.webp?x-oss-process=image/resize,limit_0,m_fill,w_100,h_100/quality,q_92/format,webp",
+                url: "https://www.doubao.com",
+                backgroundColor: "#FF5000"
+            },
+            {
+                name: "ChatGPT",
+                icon: "https://files.codelife.cc/icons/2d81ec7094a71c53.png?x-oss-process=image/resize,limit_0,m_fill,w_100,h_100/quality,q_92/format,webp",
+                url: "https://www.chatgpt.com",
+                backgroundColor: "black"
+            },
+            {
+                name: "网易",
+                icon: "https://files.codelife.cc/website/mail-163.svg",
+                url: "https://www.163.com",
+                backgroundColor: "#1DA1F2"
+            },
+            {
+                name: "豆瓣",
+                icon: "https://files.codelife.cc/website/douban.svg",
+                url: "https://www.douban.com",
+                backgroundColor: "#3b5998"
+            },
+            {
+                name: "网易云音乐",
+                icon: "https://files.codelife.cc/website/music163.svg",
+                url: "https://music.163.com",
+                backgroundColor: "#D43C33"
+            }
+        ];
+
+        // 动态生成图标（修复之前重复添加自身的bug）
+        const container = document.getElementById('icon-container');
+        icons.forEach(item => {
+            const iconItem = document.createElement('div');
+            iconItem.className = 'icon-item';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'icon';
+            iconDiv.style.backgroundColor = item.backgroundColor;
+
+            const img = document.createElement('img');
+            img.src = item.icon;
+            img.alt = item.name;
+
+            const iconName = document.createElement('div');
+            iconName.className = 'icon-name';
+            iconName.textContent = item.name;
+
+            iconItem.onclick = () => window.open(item.url, '_self');
+
+            // 修复bug：删掉之前多余的 iconItem.appendChild(iconItem)
+            iconDiv.appendChild(img);
+            iconItem.appendChild(iconDiv);
+            iconItem.appendChild(iconName);
+            container.appendChild(iconItem);
+        });
+    </script>
+</body>
+</html>
