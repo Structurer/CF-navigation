@@ -3,13 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>导航（双添加按钮+右键编辑删除+无网可用+拖拽排序+导出+导入）</title>
+<title>导航（跨栏拖拽+增删改查+导入导出+右键菜单）</title>
 <style>
-html, body {
+/* 核心修复：全局禁用文本选中，拖拽不再反选文字，适配所有元素 */
+* {
     margin: 0;
     padding: 0;
-    height: 100%;
     box-sizing: border-box;
+    -webkit-user-select: none; /* 谷歌/苹果浏览器 */
+    -moz-user-select: none;    /* 火狐浏览器 */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;         /* 标准语法 */
+}
+html, body {
+    height: 100%;
     font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 .container {
@@ -48,11 +55,9 @@ html, body {
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
 }
 .google-button:hover {
     background-color: #f1f3f4;
-    border-color: #d1d5db;
 }
 input[type="text"] {
     padding: 8px 12px;
@@ -60,6 +65,11 @@ input[type="text"] {
     border-radius: 3px;
     flex: 1;
     font-size: 16px;
+    /* 搜索框单独允许文本选中，方便输入，其余全部禁用 */
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
 }
 input:focus {
     outline: none;
@@ -74,7 +84,6 @@ input:focus {
     border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
-    transition: background 0.3s;
 }
 .baidu-button:hover {
     background: #6bbfff;
@@ -91,37 +100,35 @@ input:focus {
 #icon-container {  
     width: 100%;
     max-width: 1200px;
-    height: auto;
     margin: 0 30px 30px;
 }
+/* 彻底删除栏目标题相关样式，无残留 */
 .category-column {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 25px;
-    justify-items: center;
     width: 100%;
     margin-bottom: 60px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 .category-column:last-child {
     margin-bottom: 0;
+}
+/* 图标容器横向排列，适配grid布局 */
+.icon-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 25px;
+    width: 100%;
 }
 .icon-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    cursor: default; /* 普通箭头 */
+    cursor: grab;
     width: 80px;
     gap: 8px;
-    position: relative;
 }
 .icon-item:active {
-    cursor: default;
-}
-.icon-item.dragging {
-    opacity: 0.6;
-    transform: scale(1.15);
-    z-index: 99;
+    cursor: grabbing;
 }
 .icon {
     width: 56px;
@@ -151,6 +158,18 @@ input:focus {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+}
+/* SortableJS 拖拽样式，无文本选中干扰 */
+.icon-item.ghost {
+    opacity: 0.6;
+    background: rgba(127, 196, 255, 0.3);
+    border-radius: 10px;
+    pointer-events: none;
+}
+.icon-item.dragging {
+    opacity: 0.7;
+    transform: scale(1.1);
+    z-index: 999;
 }
 .modal {
     display: none;
@@ -198,18 +217,9 @@ input:focus {
     border-radius: 4px;
     cursor: pointer;
 }
-.btn-save {
-    background: #007bff;
-    color: white;
-}
-.btn-close {
-    background: #6c757d;
-    color: white;
-}
-.btn-delete {
-    background: #dc3545;
-    color: white;
-}
+.btn-save { background: #007bff; color: white; }
+.btn-close { background: #6c757d; color: white; }
+.btn-delete { background: #dc3545; color: white; }
 .right-click-menu {
     display: none;
     position: fixed;
@@ -220,23 +230,14 @@ input:focus {
     z-index: 998;
     padding: 5px 0;
 }
-.right-click-menu.show {
-    display: block;
-}
+.right-click-menu.show { display: block; }
 .right-click-menu li {
     list-style: none;
     padding: 8px 12px;
     cursor: pointer;
     font-size: 14px;
 }
-.right-click-menu li:hover {
-    background: #f5f5f5;
-}
-.right-click-menu li:nth-child(1) { color: #007bff; }
-.right-click-menu li:nth-child(2) { color: #28a745; border-top: 1px solid #eee; }
-.right-click-menu li:nth-child(3) { color: #dc3545; border-top: 1px solid #eee; }
-.right-click-menu li:nth-child(4) { color: #17a2b8; border-top: 1px solid #eee; }
-.right-click-menu li:nth-child(5) { color: #17a2b8; border-top: 1px solid #eee; }
+.right-click-menu li:hover { background: #f5f5f5; }
 .toast {
     position: fixed;
     bottom: 30px;
@@ -250,18 +251,15 @@ input:focus {
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     transform: translateX(-50%) translateY(20px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 .toast.success { background: #28a745; }
 .toast.error { background: #dc3545; }
 .toast.info { background: #17a2b8; }
-.toast.show {
+.toast.show { 
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
-#fileInput {
-    display: none;
-}
+#fileInput { display: none; }
 </style>
 </head>
 <body>
@@ -305,9 +303,9 @@ input:focus {
 
 <div class="modal" id="deleteModal">
     <div class="modal-content" style="max-width: 300px; text-align: center;">
-        <h3 style="margin: 0 0 15px 0; font-size: 16px;">确认删除该图标吗？</h3>
-        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">删除后无法恢复哦～</p>
-        <div class="modal-buttons" style="justify-content: center;">
+        <h3>确认删除该图标吗？</h3>
+        <p>删除后无法恢复哦～</p>
+        <div class="modal-buttons">
             <button class="btn-close" onclick="closeModal()">取消</button>
             <button class="btn-delete" onclick="confirmDelete()">确认删除</button>
         </div>
@@ -315,54 +313,48 @@ input:focus {
 </div>
 
 <div class="toast" id="toast"></div>
-
 <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileImport(event)">
 
+<!-- 引入SortableJS -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
+// 全局配置：右键菜单拦截
 document.addEventListener('contextmenu', event => {
     event.preventDefault();
-    // 如果点击的不是 .icon-item，就关闭所有右键菜单
     if (!event.target.closest('.icon-item')) {
-        document.querySelectorAll('.right-click-menu').forEach(menu => {
-            menu.classList.remove('show');
-        });
+        document.querySelectorAll('.right-click-menu').forEach(menu => menu.classList.remove('show'));
     }
 });
-
-
+// 本地存储KEY（上下栏）
 const STORAGE_KEY_COL1 = 'nav_icons_column1';
 const STORAGE_KEY_COL2 = 'nav_icons_column2';
 let currentOptData = { type: 'add', targetCol: STORAGE_KEY_COL1, index: -1, data: {} };
-let draggingItem = null;
-let draggingColKey = '';
-
-const baiduButton = document.getElementById('baidusearchButton');
-const googleButton = document.getElementById('googleButton');
-const searchInput = document.getElementById('searchInput');
-function performSearch(searchUrlPrefix, searchText) {
-    if (searchText.trim() !== '') {
-        const searchUrl = `${searchUrlPrefix}${encodeURIComponent(searchText)}`;
-        window.location.href = searchUrl;
-    }
-}
-baiduButton.addEventListener('click', () => performSearch('https://www.baidu.com/s?wd=', searchInput.value));
-googleButton.addEventListener('click', () => performSearch('https://www.google.com/search?q=', searchInput.value));
-searchInput.addEventListener('keydown', (e) => e.key === 'Enter' && performSearch('https://www.baidu.com/s?wd=', searchInput.value));
-
 const container = document.getElementById('icon-container');
+
+// 初始化DOM结构：删除栏目标题，仅保留图标容器，简洁无冗余
 const column1 = document.createElement('div');
 const column2 = document.createElement('div');
 column1.className = 'category-column';
 column2.className = 'category-column';
+// 图标容器（Sortable挂载核心，无标题干扰）
+const iconWrap1 = document.createElement('div');
+const iconWrap2 = document.createElement('div');
+iconWrap1.className = 'icon-wrap';
+iconWrap2.className = 'icon-wrap';
+// 组装DOM：无任何标题，纯图标展示
+column1.appendChild(iconWrap1);
+column2.appendChild(iconWrap2);
 container.appendChild(column1);
 container.appendChild(column2);
 
-function renderIcons(column, iconsData, columnKey) {
-    column.innerHTML = '';
-    iconsData.forEach((item, index) => {
+// 渲染图标：每个图标绑定完整数据，拖拽无错乱
+function renderIcons(iconWrap, iconsData, columnKey) {
+    iconWrap.innerHTML = '';
+    iconsData.forEach((item) => {
         const iconItem = document.createElement('div');
         iconItem.className = 'icon-item';
-        iconItem.dataset.index = index;
+        // 绑定完整图标数据，跨栏/排序精准匹配
+        iconItem.dataset.iconData = JSON.stringify(item);
         iconItem.dataset.column = columnKey;
 
         const iconDiv = document.createElement('div');
@@ -381,11 +373,11 @@ function renderIcons(column, iconsData, columnKey) {
             altText.style.textAlign = 'center';
             iconDiv.appendChild(altText);
         };
-
         const iconName = document.createElement('div');
         iconName.className = 'icon-name';
         iconName.textContent = item.name;
-
+        
+        // 图标点击跳转
         iconItem.onclick = (e) => {
             if (e.target.closest('.right-click-menu')) return;
             if (item.url && item.url.trim().startsWith('http')) {
@@ -395,53 +387,44 @@ function renderIcons(column, iconsData, columnKey) {
             }
         };
 
+        // 右键菜单：保留所有增删改查/导入导出功能
         const rightMenu = createRightClickMenu(columnKey);
         iconItem.appendChild(rightMenu);
         iconItem.oncontextmenu = (e) => {
             e.preventDefault();
             document.querySelectorAll('.right-click-menu').forEach(menu => menu.classList.remove('show'));
             rightMenu.classList.add('show');
-
             const menuWidth = rightMenu.offsetWidth;
             const menuHeight = rightMenu.offsetHeight;
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
-
             let leftPos = e.clientX;
             let topPos = e.clientY - 20;
-
             if (leftPos + menuWidth > screenWidth) leftPos = screenWidth - menuWidth;
             if (topPos + menuHeight > screenHeight) topPos = screenHeight - menuHeight;
             if (topPos < 0) topPos = 0;
             if (leftPos < 0) leftPos = 0;
-
             rightMenu.style.left = `${leftPos}px`;
             rightMenu.style.top = `${topPos}px`;
-
-            currentOptData = { type: 'edit', targetCol: columnKey, index: index, data: item };
+            // 右键绑定当前图标数据，精准编辑/删除
+            currentOptData = { type: 'edit', targetCol: columnKey, data: item };
+            currentOptData.index = iconsData.findIndex(icon => JSON.stringify(icon) === JSON.stringify(item));
         };
-
-        bindDragEvents(iconItem, columnKey);
 
         iconDiv.appendChild(img);
         iconItem.appendChild(iconDiv);
         iconItem.appendChild(iconName);
-        column.appendChild(iconItem);
+        iconWrap.appendChild(iconItem);
     });
-    bindColumnDropEvent(column, columnKey);
 }
 
+// 右键菜单（功能完整无删减）
 function createRightClickMenu(columnKey) {
     const menu = document.createElement('ul');
     menu.className = 'right-click-menu';
-
     const editLi = document.createElement('li');
     editLi.textContent = '编辑图标';
-    editLi.onclick = () => {
-        menu.classList.remove('show');
-        openEditModal();
-    };
-
+    editLi.onclick = () => { menu.classList.remove('show'); openEditModal(); };
     const addLi = document.createElement('li');
     addLi.textContent = '添加图标';
     addLi.onclick = () => {
@@ -450,44 +433,28 @@ function createRightClickMenu(columnKey) {
         currentOptData = { type: 'add', targetCol: columnKey, index: -1, data: {} };
         openAddModal(colName);
     };
-
     const delLi = document.createElement('li');
     delLi.textContent = '删除图标';
-    delLi.onclick = () => {
-        menu.classList.remove('show');
-        openDeleteModal();
-    };
-
+    delLi.onclick = () => { menu.classList.remove('show'); openDeleteModal(); };
     const importLi = document.createElement('li');
     importLi.textContent = '导入本栏数据';
-    importLi.onclick = () => {
-        menu.classList.remove('show');
-        document.getElementById('fileInput').click();
-    };
-
+    importLi.onclick = () => { menu.classList.remove('show'); document.getElementById('fileInput').click(); };
     const exportLi = document.createElement('li');
     exportLi.textContent = '导出本栏数据';
-    exportLi.onclick = () => {
-        menu.classList.remove('show');
-        exportColumnIcons();
-    };
-
+    exportLi.onclick = () => { menu.classList.remove('show'); exportColumnIcons(); };
     menu.appendChild(editLi);
     menu.appendChild(addLi);
     menu.appendChild(delLi);
     menu.appendChild(importLi);
     menu.appendChild(exportLi);
-
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.icon-item')) menu.classList.remove('show');
-    });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.icon-item')) menu.classList.remove('show'); });
     return menu;
 }
 
+// 导入功能（正常使用）
 function handleFileImport(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
@@ -503,6 +470,7 @@ function handleFileImport(event) {
     reader.readAsText(file);
 }
 
+// 本地存储操作：获取/设置图标数据
 function getIconsFromStorage(storageKey) {
     const data = localStorage.getItem(storageKey);
     return data ? JSON.parse(data) : [];
@@ -511,36 +479,86 @@ function setIconsToStorage(storageKey, data) {
     localStorage.setItem(storageKey, JSON.stringify(data));
 }
 
+// 页面初始化：渲染图标+初始化跨栏拖拽
 async function initIcons() {
+    // 上栏数据初始化
     const col1Data = getIconsFromStorage(STORAGE_KEY_COL1);
     if (col1Data.length === 0) {
         try {
             const res = await fetch('webs1.json');
             const jsonData = await res.json();
             setIconsToStorage(STORAGE_KEY_COL1, jsonData);
-            renderIcons(column1, jsonData, STORAGE_KEY_COL1);
+            renderIcons(iconWrap1, jsonData, STORAGE_KEY_COL1);
         } catch (err) {
-            renderIcons(column1, [], STORAGE_KEY_COL1);
+            renderIcons(iconWrap1, [], STORAGE_KEY_COL1);
         }
     } else {
-        renderIcons(column1, col1Data, STORAGE_KEY_COL1);
+        renderIcons(iconWrap1, col1Data, STORAGE_KEY_COL1);
     }
-
+    // 下栏数据初始化
     const col2Data = getIconsFromStorage(STORAGE_KEY_COL2);
     if (col2Data.length === 0) {
         try {
             const res = await fetch('webs2.json');
             const jsonData = await res.json();
             setIconsToStorage(STORAGE_KEY_COL2, jsonData);
-            renderIcons(column2, jsonData, STORAGE_KEY_COL2);
+            renderIcons(iconWrap2, jsonData, STORAGE_KEY_COL2);
         } catch (err) {
-            renderIcons(column2, [], STORAGE_KEY_COL2);
+            renderIcons(iconWrap2, [], STORAGE_KEY_COL2);
         }
     } else {
-        renderIcons(column2, col2Data, STORAGE_KEY_COL2);
+        renderIcons(iconWrap2, col2Data, STORAGE_KEY_COL2);
     }
+    // 初始化跨栏拖拽（无文本选中干扰）
+    initCrossColumnSortable();
 }
 
+// 跨栏拖拽核心：无错乱+无文本选中问题
+function initCrossColumnSortable() {
+    const sortableConfig = {
+        group: 'nav-icons-group', // 同一分组实现上下栏互拖
+        animation: 150, // 平滑拖拽动画
+        ghostClass: 'ghost', // 拖拽占位样式
+        dragClass: 'dragging', // 拖拽中元素样式
+        handle: '.icon', // 仅点击图标可拖拽，避免误触
+        forceFallback: true, // 强制自定义拖拽，彻底规避浏览器默认行为（含文本选中）
+        fallbackClass: 'dragging',
+        // 拖拽结束：精准同步DOM数据到本地存储，无任何错乱
+        onEnd: (evt) => {
+            const fromWrap = evt.from;
+            const toWrap = evt.to;
+            const fromKey = fromWrap === iconWrap1 ? STORAGE_KEY_COL1 : STORAGE_KEY_COL2;
+            const toKey = toWrap === iconWrap1 ? STORAGE_KEY_COL1 : STORAGE_KEY_COL2;
+
+            // 从DOM读取完整图标数据，精准无偏差
+            const getIconsFromDom = (wrap) => {
+                return [...wrap.querySelectorAll('.icon-item')].map(item => {
+                    return JSON.parse(item.dataset.iconData);
+                });
+            };
+
+            // 同栏排序同步
+            if (fromKey === toKey) {
+                const newIcons = getIconsFromDom(toWrap);
+                setIconsToStorage(toKey, newIcons);
+                showToast('同栏排序成功！', 'success');
+            } else {
+                // 跨栏排序同步：源栏+目标栏数据分别更新
+                const fromNewIcons = getIconsFromDom(fromWrap);
+                const toNewIcons = getIconsFromDom(toWrap);
+                setIconsToStorage(fromKey, fromNewIcons);
+                setIconsToStorage(toKey, toNewIcons);
+                showToast('跨栏排序成功！', 'success');
+            }
+            refreshIconsRender();
+        }
+    };
+    // 挂载拖拽功能到两个图标容器
+    new Sortable(iconWrap1, sortableConfig);
+    new Sortable(iconWrap2, sortableConfig);
+}
+
+// 模态框相关：添加/编辑图标（正常使用）
 function openAddModal(colName) {
     document.getElementById('modalTitle').textContent = `添加${colName}图标`;
     document.getElementById('modalSubmitBtn').textContent = '保存（即时生效）';
@@ -570,10 +588,11 @@ function closeModal() {
 }
 function resetModalForm() {
     document.querySelectorAll('#iconModal input').forEach(el => {
-        el.value = el.tagName === 'INPUT' && el.type === 'color' ? '#4cafef' : '';
+        el.value = el.type === 'color' ? '#4cafef' : '';
     });
 }
 
+// 图标保存：添加/编辑功能正常
 function submitIcon() {
     const url = document.getElementById('urlInput').value.trim();
     const name = document.getElementById('nameInput').value.trim();
@@ -581,7 +600,6 @@ function submitIcon() {
     const alt = document.getElementById('altInput').value.trim();
     const icon = document.getElementById('iconInput').value.trim();
     const targetCol = currentOptData.targetCol;
-
     if (!url || !name || !alt || !icon) {
         showToast('请填写所有必填项（带*号）！', 'error');
         return;
@@ -590,10 +608,8 @@ function submitIcon() {
         showToast('URL请以 http:// 或 https:// 开头！', 'error');
         return;
     }
-
     const newIcon = { name, icon, alt, url, backgroundColor };
     const oldIcons = getIconsFromStorage(targetCol);
-
     if (currentOptData.type === 'add') {
         oldIcons.push(newIcon);
         const colName = targetCol === STORAGE_KEY_COL1 ? '上栏' : '下栏';
@@ -602,94 +618,41 @@ function submitIcon() {
         oldIcons[currentOptData.index] = newIcon;
         showToast('图标修改成功！', 'success');
     }
-
     setIconsToStorage(targetCol, oldIcons);
     refreshIconsRender();
     closeModal();
 }
 
+// 图标删除：精准匹配删除，无错乱
 function confirmDelete() {
-    const { targetCol, index } = currentOptData;
+    const { targetCol, data } = currentOptData;
     const oldIcons = getIconsFromStorage(targetCol);
-    oldIcons.splice(index, 1);
-    setIconsToStorage(targetCol, oldIcons);
+    const newIcons = oldIcons.filter(icon => JSON.stringify(icon) !== JSON.stringify(data));
+    setIconsToStorage(targetCol, newIcons);
     refreshIconsRender();
     closeModal();
     showToast('图标删除成功！', 'success');
 }
 
+// 刷新渲染：同步本地存储与DOM展示
 function refreshIconsRender() {
     const col1Data = getIconsFromStorage(STORAGE_KEY_COL1);
-    renderIcons(column1, col1Data, STORAGE_KEY_COL1);
+    renderIcons(iconWrap1, col1Data, STORAGE_KEY_COL1);
     const col2Data = getIconsFromStorage(STORAGE_KEY_COL2);
-    renderIcons(column2, col2Data, STORAGE_KEY_COL2);
+    renderIcons(iconWrap2, col2Data, STORAGE_KEY_COL2);
+    initCrossColumnSortable();
 }
 
+// 提示框：操作反馈正常显示
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.className = 'toast';
     toast.classList.add(type, 'show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+    setTimeout(() => { toast.classList.remove('show'); }, 3000);
 }
 
-function bindDragEvents(item, colKey) {
-    item.draggable = true;
-    item.addEventListener('dragstart', (e) => {
-        draggingItem = item;
-        draggingColKey = colKey;
-        item.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', item.dataset.index);
-    });
-    item.addEventListener('dragend', () => {
-        draggingItem = null;
-        draggingColKey = '';
-        document.querySelectorAll('.icon-item').forEach(ele => ele.classList.remove('dragging'));
-    });
-}
-
-function bindColumnDropEvent(column, colKey) {
-    column.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const hoverItem = getHoverItem(column, e.clientX, e.clientY);
-        if (hoverItem && draggingItem !== hoverItem) {
-            const rect = hoverItem.getBoundingClientRect();
-            const isBefore = e.clientX < rect.left + rect.width/2 || e.clientY < rect.top + rect.height/2;
-            if (isBefore) {
-                column.insertBefore(draggingItem, hoverItem);
-            } else {
-                column.insertBefore(draggingItem, hoverItem.nextSibling);
-            }
-        }
-    });
-    column.addEventListener('drop', (e) => {
-        e.preventDefault();
-        if (!draggingItem || draggingColKey !== colKey) return;
-        sortIconsAfterDrop(colKey);
-    });
-}
-
-function getHoverItem(column, xCoord, yCoord) {
-    const items = [...column.querySelectorAll('.icon-item:not(.dragging)')];
-    return items.find(item => {
-        const rect = item.getBoundingClientRect();
-        return xCoord >= rect.left && xCoord <= rect.right 
-            && yCoord >= rect.top && yCoord <= rect.bottom;
-    }) || null;
-}
-function sortIconsAfterDrop(colKey) {
-    const column = colKey === STORAGE_KEY_COL1 ? column1 : column2;
-    const sortedItems = [...column.querySelectorAll('.icon-item')];
-    const oldIcons = getIconsFromStorage(colKey);
-    const newIcons = sortedItems.map(item => oldIcons[parseInt(item.dataset.index)]);
-    setIconsToStorage(colKey, newIcons);
-    refreshIconsRender();
-    showToast('图标排序成功！', 'success');
-}
-    
+// 导出功能：导出对应栏图标数据
 function exportColumnIcons() {
     const targetCol = currentOptData.targetCol;
     const colIcons = getIconsFromStorage(targetCol);
@@ -707,30 +670,22 @@ function exportColumnIcons() {
     showToast(`已导出${fileName}，共${colIcons.length}个图标数据`, 'info');
 }
 
-window.onload = initIcons;
-
-
-
-// 禁用 Ctrl+S（保存页面）、Ctrl+A（全选）、Ctrl+P（打印）
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey) {
-        if (e.key === 's' || e.key === 'S' ||
-            e.key === 'a' || e.key === 'A' ||
-            e.key === 'p' || e.key === 'P') {
-            e.preventDefault();
-        }
+// 搜索功能：谷歌+百度搜索，正常使用
+const baiduButton = document.getElementById('baidusearchButton');
+const googleButton = document.getElementById('googleButton');
+const searchInput = document.getElementById('searchInput');
+function performSearch(searchUrlPrefix, searchText) {
+    if (searchText.trim() !== '') {
+        const searchUrl = `${searchUrlPrefix}${encodeURIComponent(searchText)}`;
+        window.location.href = searchUrl;
     }
-});
+}
+baiduButton.addEventListener('click', () => performSearch('https://www.baidu.com/s?wd=', searchInput.value));
+googleButton.addEventListener('click', () => performSearch('https://www.google.com/search?q=', searchInput.value));
+searchInput.addEventListener('keydown', (e) => e.key === 'Enter' && performSearch('https://www.baidu.com/s?wd=', searchInput.value));
 
-
-
-
-
-
-
-
-
-
+// 页面加载完成初始化所有功能
+window.onload = initIcons;
 </script>
 </body>
 </html>
