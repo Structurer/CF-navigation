@@ -94,6 +94,13 @@ input:focus {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  /* 隐藏WebKit内核浏览器（Chrome、Safari等）滚动条 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/* 隐藏Chrome/Safari等浏览器的滚动条 */
+.bottom-section::-webkit-scrollbar {
+  display: none;
 }
 #icon-container {  
   width: 100%;
