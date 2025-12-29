@@ -98,93 +98,93 @@
         "backgroundColor": "#0071E3"
     },
     {
-        "name": "w3school",
-        "icon": "./icons/w3school.svg",
-        "alt": "w3s",
-        "url": "https://www.w3school.com.cn",
-        "backgroundColor": "#04AA6D"
-    },
-    {
         "name": "番茄小说网",
-        "icon": "./icons/tomato-novel.svg",
+        "icon": "./icons/fanqienovel.svg",
         "alt": "番茄",
         "url": "https://fanqienovel.com",
-        "backgroundColor": "#FF2D55"
+        "backgroundColor": "#FFFFFF"
     },
     {
         "name": "阿里云盘",
-        "icon": "./icons/alicloud-drive.svg",
+        "icon": "./icons/aliyundrive.svg",
         "alt": "阿里盘",
         "url": "https://www.aliyundrive.com",
-        "backgroundColor": "#2395F1"
+        "backgroundColor": "#7573ff"
     },
     {
         "name": "百度云",
-        "icon": "./icons/baiduyun.svg",
+        "icon": "./icons/pan-baidu.svg",
         "alt": "百度云",
         "url": "https://pan.baidu.com",
-        "backgroundColor": "#216CE7"
-    },
-    {
-        "name": "MindMaster",
-        "icon": "./icons/mindmaster.svg",
-        "alt": "Mind",
-        "url": "https://www.edrawsoft.cn/mindmaster",
-        "backgroundColor": "#4E82FF"
-    },
-    {
-        "name": "道客巴巴",
-        "icon": "./icons/daoke88.svg",
-        "alt": "道客",
-        "url": "https://www.doc88.com",
-        "backgroundColor": "#E83015"
-    },
-    {
-        "name": "中国大学MOOC",
-        "icon": "./icons/icourse163.svg",
-        "alt": "MOOC",
-        "url": "https://www.icourse163.org",
-        "backgroundColor": "#5C8BFF"
-    },
-    {
-        "name": "有道学术",
-        "icon": "./icons/youdao-academic.svg",
-        "alt": "有道",
-        "url": "https://xueshu.youdao.com",
-        "backgroundColor": "#E83015"
+        "backgroundColor": "#FFFFFF"
     },
     {
         "name": "中国知网",
-        "icon": "./icons/cnki.svg",
+        "icon": "./icons/cnki.webp",
         "alt": "知网",
         "url": "https://www.cnki.net",
         "backgroundColor": "#2F6EDE"
     },
     {
         "name": "OneDrive",
-        "icon": "./icons/onedrive.svg",
+        "icon": "./icons/OneDrive.webp",
         "alt": "Drive",
         "url": "https://onedrive.live.com",
         "backgroundColor": "#0078D4"
+    },
+    {
+        "name": "RackNerd",
+        "icon": "./icons/RackNerd.png",
+        "alt": "Rack",
+        "url": "https://www.racknerd.com/",
+        "backgroundColor": "#FFA500"
+    },
+    {
+        "name": "中国大学MOOC",
+        "icon": "./icons/MOOC.webp",
+        "alt": "MOOC",
+        "url": "https://www.icourse163.org",
+        "backgroundColor": "#5C8BFF"
+    },
+    {
+        "name": "w3school",
+        "icon": "./icons/w3school.svg",
+        "alt": "w3s",
+        "url": "https://www.w3school.com.cn",
+        "backgroundColor": "#cc3333"
     },
     {
         "name": "测速网",
         "icon": "./icons/speedtest.svg",
         "alt": "测速",
         "url": "https://www.speedtest.cn",
-        "backgroundColor": "#00BFFF"
+        "backgroundColor": "#1c2132"
     },
     {
-        "name": "备忘录",
-        "icon": "./icons/notes.svg",
-        "alt": "备忘录",
-        "url": "#",
-        "backgroundColor": "#FFA500"
+        "name": "MindMaster",
+        "icon": "./icons/mindmaster.webp",
+        "alt": "Mind",
+        "url": "https://www.edrawsoft.cn/mindmaster",
+        "backgroundColor": "#00cc99"
+    },
+    {
+        "name": "1diary",
+        "icon": "./icons/diary.png",
+        "alt": "diary",
+        "url": "https://1diary.me",
+        "backgroundColor": "#00cc99"
+    },
+    {
+        "name": "Bitwarden",
+        "icon": "./icons/bitwarden.svg",
+        "alt": "BW",
+        "url": "https://bitwarden.com/brand",
+        "backgroundColor": "#175DDC"
     },
     {
         "name": "wo邮箱",
-        "icon": "./icons/wo-email.svg",
-        "alt": "wo",
+        "icon": "./icons/wo.png",
+        "alt": "WO",
         "url": "https://mail.wo.cn",
         "backgroundColor": "#FF8C00"
     }

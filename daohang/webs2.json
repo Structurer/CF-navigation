@@ -42,6 +42,13 @@
         "backgroundColor": "#ffffff"
     },
     {
+        "name": "ProtonMail",
+        "icon": "./icons/proton.webp",
+        "alt": "proton",
+        "url": "http://mail.protonmail.com",
+        "backgroundColor": "#9498c8"
+    },
+    {
         "name": "Gmail",
         "icon": "./icons/gmail.svg",
         "alt": "Gmail",
@@ -56,18 +63,11 @@
         "backgroundColor": "#000000"
     },
     {
-        "name": "Netlify",
-        "icon": "./icons/netlify.svg",
-        "alt": "Netlify",
+        "name": "Netflix",
+        "icon": "./icons/netflix.webp",
+        "alt": "Netflix",
         "url": "https://www.netlify.com/press/",
-        "backgroundColor": "#00C7B7"
-    },
-    {
-        "name": "Bitwarden",
-        "icon": "./icons/bitwarden.svg",
-        "alt": "Bitwar",
-        "url": "https://bitwarden.com/brand",
-        "backgroundColor": "#175DDC"
+        "backgroundColor": "#FFFFFF"
     },
     {
         "name": "Obsidian",
@@ -98,32 +98,11 @@
         "backgroundColor": "#F37626"
     },
     {
-        "name": "1diary",
-        "icon": "https://files.codelife.cc/icons/diary.svg",
-        "alt": "1diary",
-        "url": "#",
-        "backgroundColor": "#FF69B4"
-    },
-    {
-        "name": "RackNerd",
-        "icon": "https://files.codelife.cc/icons/racknerd.svg",
-        "alt": "Rack",
-        "url": "https://www.racknerd.com",
-        "backgroundColor": "#8A2BE2"
-    },
-    {
         "name": "Control Panel",
         "icon": "https://files.codelife.cc/icons/cpanel.svg",
         "alt": "Panel",
         "url": "#",
         "backgroundColor": "#0066CC"
-    },
-    {
-        "name": "mars",
-        "icon": "https://files.codelife.cc/icons/mars.svg",
-        "alt": "mars",
-        "url": "#",
-        "backgroundColor": "#CD5C5C"
     },
     {
         "name": "poe",
