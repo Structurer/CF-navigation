@@ -70,18 +70,18 @@
         "backgroundColor": "#FFFFFF"
     },
     {
+        "name": "Reddit",
+        "icon": "./icons/reddit.png",
+        "alt": "Reddit",
+        "url": "http://www.reddit.com",
+        "backgroundColor": "#FF4500"
+    },
+    {
         "name": "Obsidian",
         "icon": "./icons/obsidian.svg",
         "alt": "Obsi",
         "url": "https://obsidian.md",
         "backgroundColor": "#7C3AED"
-    },
-    {
-        "name": "Reddit",
-        "icon": "./icons/reddit.svg",
-        "alt": "Reddit",
-        "url": "https://www.redditinc.com/brand",
-        "backgroundColor": "#FF4500"
     },
     {
         "name": "Claude",
