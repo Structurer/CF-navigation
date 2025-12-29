@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>本地导航页（精准导入导出+唯一ID删除）</title>
+  <title>导航</title>
   <!-- 引入外部CSS样式文件 -->
   <link rel="stylesheet" href="style.css">
 </head>
@@ -39,7 +39,7 @@
       <input type="text" id="altInput" placeholder="输入图标说明文字">
       <label>图标路径：<span style="color:red;">*</span></label>
       <input type="text" id="iconInput" placeholder="输入图标文件名（如：baidu.svg）" value="./icons/">
-      <div class="path-tip">默认前缀已填充，直接输入图标文件名即可，支持手动修改完整路径</div>
+      <div class="path-tip">默认前缀已填充，输入图标文件名即可，支持手动修改完整路径</div>
       <div class="modal-buttons">
         <button class="btn-close" onclick="closeModal()">关闭</button>
         <button class="btn-save" id="modalSubmitBtn" onclick="submitIcon()">保存（即时生效）</button>
