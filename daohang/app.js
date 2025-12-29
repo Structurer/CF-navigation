@@ -95,7 +95,7 @@ function renderIcons(iconWrap, iconsData, columnKey) {
     iconName.className = 'icon-name';
     iconName.textContent = item.name;
     
-    // 图标点击跳转功能
+    // 桌面端点击跳转（保持原样）
     iconItem.onclick = (e) => {
       if (e.target.closest('.right-click-menu') || isDraggingEnabled) return;
       if (item.url && item.url.trim().startsWith('http')) {
@@ -109,97 +109,73 @@ function renderIcons(iconWrap, iconsData, columnKey) {
     // 统一处理开始事件（鼠标+触摸）
     // ===============================
     function handleStart(e) {
-  if (e.button === 2 || (e.type === 'touchstart' && e.touches.length > 1)) return;
+      // 右键或多点触摸不触发
+      if (e.button === 2 || (e.type === 'touchstart' && e.touches.length > 1)) return;
 
-  currentDraggedElement = iconItem;
-  iconDiv.classList.add('waiting');
+      currentDraggedElement = iconItem;
+      iconDiv.classList.add('waiting');
 
-  touchStartTime = e.timeStamp;
-  isTouchDragReady = false;
+      touchStartTime = e.timeStamp;
+      isTouchDragReady = false;
 
-  dragTimer = setTimeout(() => {
-    isDraggingEnabled = true;
-    isTouchDragReady = true;
-    iconItem.style.cursor = 'grabbing';
-    iconItem.classList.add('shaking');
-    showToast('可以拖拽了（抖动中）', 'info');
-  }, DRAG_DELAY);
-}
-
-iconDiv.addEventListener('mousedown', handleStart);
-iconDiv.addEventListener('touchstart', handleStart); // 不再这里preventDefault
-
-iconDiv.addEventListener('touchmove', (e) => {
-  if (isTouchDragReady) {
-    e.preventDefault(); // 拖拽时阻止滚动
-  }
-});
-
-function handleEnd(e) {
-  clearTimeout(dragTimer);
-  if (currentDraggedElement) {
-    currentDraggedElement.querySelector('.icon').classList.remove('waiting');
-    currentDraggedElement.style.cursor = 'grab';
-    currentDraggedElement.classList.remove('shaking');
-  }
-
-  // 判断是否是点击
-  const touchDuration = e.timeStamp - touchStartTime;
-  if (touchDuration < DRAG_DELAY && !isDraggingEnabled) {
-    // 点击，执行跳转
-    if (item.url && item.url.trim().startsWith('http')) {
-      window.open(item.url, '_self');
-    } else {
-      showToast('图标URL无效！', 'error');
+      dragTimer = setTimeout(() => {
+        isDraggingEnabled = true;
+        isTouchDragReady = true; // 移动端标记已准备好拖拽
+        iconItem.style.cursor = 'grabbing';
+        iconItem.classList.add('shaking');
+        showToast('可以拖拽了（抖动中）', 'info');
+      }, DRAG_DELAY);
     }
-  }
 
-  isDraggingEnabled = false;
-  isTouchDragReady = false;
-  currentDraggedElement = null;
-  touchStartTime = 0;
-}
-
-document.addEventListener('mouseup', handleEnd);
-document.addEventListener('touchend', handleEnd);
-document.addEventListener('touchcancel', handleEnd);
-
+    // 绑定事件：桌面端mousedown + 移动端touchstart（移除touchstart的preventDefault）
     iconDiv.addEventListener('mousedown', handleStart);
-    iconDiv.addEventListener('touchstart', (e) => {
-      e.preventDefault(); // 阻止触摸默认行为（如图片放大）
-      handleStart(e);
-    });
+    iconDiv.addEventListener('touchstart', handleStart);
 
     // ===============================
     // 触摸移动事件（移动端）
     // ===============================
     iconDiv.addEventListener('touchmove', (e) => {
-      if (!isTouchDragReady) return; // 未到延迟时间，允许滚动
-      e.preventDefault(); // 已准备好拖拽，阻止系统滚动
+      if (isTouchDragReady) {
+        e.preventDefault(); // 仅拖拽时阻止滚动，不影响点击
+      }
     });
 
     // ===============================
-    // 结束事件（鼠标+触摸）
+    // 结束事件（鼠标+触摸）：区分点击和拖拽
     // ===============================
-    function handleEnd() {
+    function handleEnd(e) {
       clearTimeout(dragTimer);
       if (currentDraggedElement) {
         currentDraggedElement.querySelector('.icon').classList.remove('waiting');
         currentDraggedElement.style.cursor = 'grab';
         currentDraggedElement.classList.remove('shaking');
       }
+
+      // 关键：判断是点击（短按）还是拖拽（长按）
+      const touchDuration = e.timeStamp - touchStartTime;
+      if (touchDuration < DRAG_DELAY && !isDraggingEnabled && e.type === 'touchend') {
+        // 移动端短按：执行跳转（和桌面端onclick逻辑一致）
+        if (item.url && item.url.trim().startsWith('http')) {
+          window.open(item.url, '_self');
+        } else {
+          showToast('图标URL无效！', 'error');
+        }
+      }
+
+      // 重置所有状态
       isDraggingEnabled = false;
       isTouchDragReady = false;
       currentDraggedElement = null;
       touchStartTime = 0;
     }
 
+    // 绑定结束事件
     document.addEventListener('mouseup', handleEnd);
     document.addEventListener('touchend', handleEnd);
-    document.addEventListener('touchcancel', handleEnd); // 意外中断
+    document.addEventListener('touchcancel', handleEnd); // 意外中断（如来电）
 
     // ===============================
-    // 鼠标移出重置
+    // 鼠标移出重置（保持原样）
     // ===============================
     iconItem.addEventListener('mouseleave', () => {
       if (!isDraggingEnabled) {
@@ -211,7 +187,7 @@ document.addEventListener('touchcancel', handleEnd);
       }
     });
 
-    // 右键菜单部分保持原样...
+    // 右键菜单部分（保持原样）
     const rightMenu = createRightClickMenu(columnKey, idx, item);
     iconItem.appendChild(rightMenu);
     iconItem.oncontextmenu = (e) => {
@@ -297,7 +273,7 @@ function createRightClickMenu(columnKey, idx, item) {
   return menu;
 }
 
-// 颜色预设初始化
+// 颜色预设初始化（保持原样）
 const urlInput = document.getElementById('urlInput');
 const iconInput = document.getElementById('iconInput');
 const colorPicker = document.getElementById('colorPicker');
@@ -344,7 +320,7 @@ function setActiveColorPreset(targetColor) {
   });
 }
 
-// 编辑图标回显
+// 编辑图标回显（保持原样）
 function fillEditForm(data) {
   urlInput.value = data.url || '';
   document.getElementById('nameInput').value = data.name || '';
@@ -355,7 +331,7 @@ function fillEditForm(data) {
   iconInput.value = data.icon || DEFAULT_ICON_PREFIX;
 }
 
-// 导入数据
+// 导入数据（保持原样）
 function handleFileImport(event) {
   const file = event.target.files[0];
   if (!file || !importExportTargetCol) {
@@ -385,7 +361,7 @@ function handleFileImport(event) {
   reader.readAsText(file);
 }
 
-// 页面初始化
+// 页面初始化（保持原样）
 async function initIcons() {
   const col1Data = getIconsFromStorage(STORAGE_KEY_COL1);
   if (col1Data.length === 0) {
@@ -419,7 +395,7 @@ async function initIcons() {
   initCrossColumnSortable();
 }
 
-// 拖拽排序
+// 拖拽排序（保持原样）
 function initCrossColumnSortable() {
   const sortableConfig = {
     group: 'nav-icons-group',
@@ -462,7 +438,7 @@ function initCrossColumnSortable() {
   new Sortable(iconWrap2, sortableConfig);
 }
 
-// 弹窗操作
+// 弹窗操作（保持原样）
 function openAddModal(colName) {
   document.getElementById('modalTitle').textContent = `添加${colName}图标`;
   document.getElementById('modalSubmitBtn').textContent = '保存（即时生效）';
@@ -599,7 +575,7 @@ function exportColumnIcons(targetCol) {
   URL.revokeObjectURL(url);
 }
 
-// 页面加载完成后初始化图标
+// 页面加载完成后初始化图标（保持原样）
 window.addEventListener('DOMContentLoaded', () => {
   initIcons();
 
