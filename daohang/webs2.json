@@ -85,7 +85,7 @@
     },
     {
         "name": "poe",
-        "icon": "https://files.codelife.cc/icons/poe.svg",
+        "icon": "./icons/poe.svg",
         "alt": "POE",
         "url": "https://poe.com",
         "backgroundColor": "#5865F2"
