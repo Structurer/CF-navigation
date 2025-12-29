@@ -91,13 +91,6 @@
         "backgroundColor": "#D97757"
     },
     {
-        "name": "Jupyter",
-        "icon": "./icons/jupyter.svg",
-        "alt": "Jupyter",
-        "url": "https://github.com/jupyter/design/blob/80716ee75dd7b2a6ec6abcd89922d020483589b1/logos/Logo%20Mark/logomark-whitebody-whitemoons/logomark-whitebody-whitemoons.svg",
-        "backgroundColor": "#F37626"
-    },
-    {
         "name": "Control Panel",
         "icon": "https://files.codelife.cc/icons/cpanel.svg",
         "alt": "Panel",
