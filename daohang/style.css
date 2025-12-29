@@ -164,8 +164,8 @@ input:focus {
   100% { transform: scale(1); }
 }
 .icon img {
-  width: 102%;
-  height: 102%;
+  width: 105%;
+  height: 105%;
   object-fit: fill;
   border-radius: 18px;
 
