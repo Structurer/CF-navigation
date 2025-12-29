@@ -126,13 +126,6 @@
         "backgroundColor": "#2F6EDE"
     },
     {
-        "name": "OneDrive",
-        "icon": "./icons/OneDrive.webp",
-        "alt": "Drive",
-        "url": "https://onedrive.com",
-        "backgroundColor": "#0078D4"
-    },
-    {
         "name": "RackNerd",
         "icon": "./icons/racknerd.png",
         "alt": "Rack",
@@ -180,12 +173,5 @@
         "alt": "BW",
         "url": "https://bitwarden.com/brand",
         "backgroundColor": "#FFFFFF"
-    },
-    {
-        "name": "wo邮箱",
-        "icon": "./icons/wo.png",
-        "alt": "WO",
-        "url": "https://mail.wo.cn",
-        "backgroundColor": "#FF8C00"
     }
 ]
