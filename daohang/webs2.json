@@ -91,13 +91,6 @@
         "backgroundColor": "#D97757"
     },
     {
-        "name": "Control Panel",
-        "icon": "https://files.codelife.cc/icons/cpanel.svg",
-        "alt": "Panel",
-        "url": "#",
-        "backgroundColor": "#0066CC"
-    },
-    {
         "name": "poe",
         "icon": "https://files.codelife.cc/icons/poe.svg",
         "alt": "POE",
