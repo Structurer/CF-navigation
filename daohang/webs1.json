@@ -168,17 +168,17 @@
         "backgroundColor": "#FFFFFF"
     },
     {
-        "name": "Control Panel",
-        "icon": "./icons/panel.svg",
-        "alt": "Panel",
-        "url": "https://nerdvm.racknerd.com/login.php",
-        "backgroundColor": "#0066CC"
-    },
-    {
         "name": "Bitwarden",
         "icon": "./icons/bitwarden.webp",
         "alt": "BW",
         "url": "https://bitwarden.com/brand",
         "backgroundColor": "#FFFFFF"
+    },
+    {
+        "name": "vpsControl",
+        "icon": "./icons/panel.svg",
+        "alt": "Panel",
+        "url": "https://nerdvm.racknerd.com/login.php",
+        "backgroundColor": "#0066CC"
     }
 ]
