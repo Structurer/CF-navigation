@@ -7,6 +7,13 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
+
+  /* 新增：禁用移动端长按菜单 */
+  -webkit-touch-callout: none;
+  /* 新增：禁用浏览器默认触摸行为（如双击放大、拖拽滚动） */
+  touch-action: none;
+
 }
 html, body {
   height: 100%;
@@ -156,10 +163,14 @@ input:focus {
   100% { transform: scale(1); }
 }
 .icon img {
-  width: 105%;
-  height: 105%;
+  width: 102%;
+  height: 102%;
   object-fit: fill;
   border-radius: 18px;
+
+  /* 新增：让图片不接收点击事件，拖拽交给父容器 */
+  pointer-events: none;
+
 }
 .icon-name {
   font-size: 14px;
