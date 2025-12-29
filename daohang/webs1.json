@@ -7,13 +7,6 @@
         "backgroundColor": "#FF5000"
     },
     {
-        "name": "Bilibili",
-        "icon": "./icons/bilibili.svg",
-        "alt": "Bilibili",
-        "url": "https://www.bilibili.com",
-        "backgroundColor": "#00A1D6"
-    },
-    {
         "name": "Notion",
         "icon": "./icons/notion.svg",
         "alt": "Notion",
@@ -21,18 +14,25 @@
         "backgroundColor": "#FFFFFF"
     },
     {
-        "name": "网易云音乐",
-        "icon": "./icons/music163.svg",
-        "alt": "网易云",
-        "url": "https://music.163.com",
-        "backgroundColor": "#D43C33"
+        "name": "Obsidian",
+        "icon": "./icons/obsidian.webp",
+        "alt": "Obsi",
+        "url": "https://obsidian.md",
+        "backgroundColor": "#FFFFFF"
     },
     {
-        "name": "豆瓣",
-        "icon": "./icons/douban.svg",
-        "alt": "豆瓣",
-        "url": "https://www.douban.com",
-        "backgroundColor": "#3b5998"
+        "name": "1diary",
+        "icon": "./icons/diary.png",
+        "alt": "diary",
+        "url": "https://1diary.me",
+        "backgroundColor": "#FFFFFF"
+    },
+    {
+        "name": "Bilibili",
+        "icon": "./icons/bilibili.svg",
+        "alt": "Bilibili",
+        "url": "https://www.bilibili.com",
+        "backgroundColor": "#00A1D6"
     },
     {
         "name": "163邮箱",
@@ -49,6 +49,13 @@
         "backgroundColor": "#FFFFFF"
     },
     {
+        "name": "网易云音乐",
+        "icon": "./icons/music163.svg",
+        "alt": "网易云",
+        "url": "https://music.163.com",
+        "backgroundColor": "#D43C33"
+    },
+    {
         "name": "Cloudflare",
         "icon": "./icons/cloudflare.svg",
         "alt": "Cloudflare",
@@ -63,13 +70,6 @@
         "backgroundColor": "#5CB85C"
     },
     {
-        "name": "知乎",
-        "icon": "./icons/zhihu.svg",
-        "alt": "知乎",
-        "url": "https://www.zhihu.com",
-        "backgroundColor": "#1DA1F2"
-    },
-    {
         "name": "微信读书",
         "icon": "./icons/weread-qq.svg",
         "alt": "读书",
@@ -82,6 +82,20 @@
         "alt": "翻译",
         "url": "https://fanyi.youdao.com",
         "backgroundColor": "#E83015"
+    },
+    {
+        "name": "RackNerd",
+        "icon": "./icons/racknerd.png",
+        "alt": "Rack",
+        "url": "https://www.racknerd.com/",
+        "backgroundColor": "#FFFFFF"
+    },
+    {
+        "name": "知乎",
+        "icon": "./icons/zhihu.svg",
+        "alt": "知乎",
+        "url": "https://www.zhihu.com",
+        "backgroundColor": "#1DA1F2"
     },
     {
         "name": "MDN",
@@ -126,13 +140,6 @@
         "backgroundColor": "#2F6EDE"
     },
     {
-        "name": "RackNerd",
-        "icon": "./icons/racknerd.png",
-        "alt": "Rack",
-        "url": "https://www.racknerd.com/",
-        "backgroundColor": "#FFFFFF"
-    },
-    {
         "name": "中国大学MOOC",
         "icon": "./icons/MOOC.webp",
         "alt": "MOOC",
@@ -154,6 +161,13 @@
         "backgroundColor": "#1c2132"
     },
     {
+        "name": "豆瓣",
+        "icon": "./icons/douban.svg",
+        "alt": "豆瓣",
+        "url": "https://www.douban.com",
+        "backgroundColor": "#3b5998"
+    },
+    {
         "name": "MindMaster",
         "icon": "./icons/mindmaster.webp",
         "alt": "Mind",
@@ -161,24 +175,10 @@
         "backgroundColor": "#00cc99"
     },
     {
-        "name": "1diary",
-        "icon": "./icons/diary.png",
-        "alt": "diary",
-        "url": "https://1diary.me",
-        "backgroundColor": "#FFFFFF"
-    },
-    {
         "name": "Bitwarden",
         "icon": "./icons/bitwarden.webp",
         "alt": "BW",
         "url": "https://bitwarden.com/brand",
-        "backgroundColor": "#FFFFFF"
-    },
-    {
-        "name": "Obsidian",
-        "icon": "./icons/obsidian.webp",
-        "alt": "Obsi",
-        "url": "https://obsidian.md",
         "backgroundColor": "#FFFFFF"
     },
     {
