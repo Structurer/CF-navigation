@@ -36,7 +36,7 @@
     },
     {
         "name": "Google",
-        "icon": "https://files.codelife.cc/icons/google.svg",
+        "icon": "./icons/google.svg",
         "alt": "Google",
         "url": "https://www.google.com",
         "backgroundColor": "#ffffff"
