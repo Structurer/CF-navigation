@@ -176,7 +176,7 @@
     },
     {
         "name": "Bitwarden",
-        "icon": "./icons/bitwarden.svg",
+        "icon": "./icons/bitwarden.webp",
         "alt": "BW",
         "url": "https://bitwarden.com/brand",
         "backgroundColor": "#175DDC"
