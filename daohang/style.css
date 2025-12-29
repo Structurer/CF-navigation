@@ -11,8 +11,6 @@
 
   /* 新增：禁用移动端长按菜单 */
   -webkit-touch-callout: none;
-  /* 新增：禁用浏览器默认触摸行为（如双击放大、拖拽滚动） */
-  touch-action: none;
 
 }
 html, body {
@@ -136,6 +134,9 @@ input:focus {
   cursor: grab;
   width: 80px;
   gap: 8px;
+
+  touch-action: none; /* 新增：只给图标项禁用触摸默认行为 */
+
 }
 .icon-item:active {
   cursor: grabbing;
@@ -149,6 +150,9 @@ input:focus {
   border-radius: 20px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s, box-shadow 0.3s;
+
+  touch-action: none; /* 新增：给图标容器再加一层保障 */
+
 }
 .icon:hover {
   transform: scale(1.1);
