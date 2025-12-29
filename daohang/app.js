@@ -560,4 +560,30 @@ function exportColumnIcons(targetCol) {
 }
 
 // 页面加载完成后初始化图标
-window.addEventListener('DOMContentLoaded', initIcons);
+window.addEventListener('DOMContentLoaded', () => {
+  initIcons(); // 原来的图标初始化
+
+  // 搜索框事件绑定
+  const baiduButton = document.getElementById('baidusearchButton');
+  const googleButton = document.getElementById('googleButton');
+  const searchInput = document.getElementById('searchInput');
+
+  function performSearch(searchUrlPrefix, searchText) {
+    if (searchText.trim() !== '') {
+      const searchUrl = `${searchUrlPrefix}${encodeURIComponent(searchText)}`;
+      window.location.href = searchUrl;
+    }
+  }
+
+  if (baiduButton && googleButton && searchInput) {
+    baiduButton.addEventListener('click', () => performSearch('https://www.baidu.com/s?wd=', searchInput.value));
+    googleButton.addEventListener('click', () => performSearch('https://www.google.com/search?q=', searchInput.value));
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        performSearch('https://www.baidu.com/s?wd=', searchInput.value);
+      }
+    });
+  } else {
+    console.warn('搜索框相关元素未找到，事件绑定失败');
+  }
+});
