@@ -15,7 +15,7 @@ const DEFAULT_COLOR_PRESETS = [
   '#3a86ff', '#9d4edd', '#ff2e99', '#6e7c7c', '#2c3e50', '#000000'
 ];
 // 拖拽延迟时间（毫秒），可根据需要调整
-const DRAG_DELAY = 500;
+const DRAG_DELAY = 200;
 
 // 全局变量：仅用于新增/编辑图标（导入导出单独锁定，不共用）
 let currentOptData = { type: 'add', targetCol: STORAGE_KEY_COL1, index: -1, data: {} };
