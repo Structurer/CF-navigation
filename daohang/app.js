@@ -109,23 +109,60 @@ function renderIcons(iconWrap, iconsData, columnKey) {
     // 统一处理开始事件（鼠标+触摸）
     // ===============================
     function handleStart(e) {
-      // 右键或多点触摸不触发
-      if (e.button === 2 || (e.type === 'touchstart' && e.touches.length > 1)) return;
+  if (e.button === 2 || (e.type === 'touchstart' && e.touches.length > 1)) return;
 
-      currentDraggedElement = iconItem;
-      iconDiv.classList.add('waiting');
+  currentDraggedElement = iconItem;
+  iconDiv.classList.add('waiting');
 
-      touchStartTime = e.timeStamp;
-      isTouchDragReady = false;
+  touchStartTime = e.timeStamp;
+  isTouchDragReady = false;
 
-      dragTimer = setTimeout(() => {
-        isDraggingEnabled = true;
-        isTouchDragReady = true; // 移动端标记已准备好拖拽
-        iconItem.style.cursor = 'grabbing';
-        iconItem.classList.add('shaking');
-        showToast('可以拖拽了（抖动中）', 'info');
-      }, DRAG_DELAY);
+  dragTimer = setTimeout(() => {
+    isDraggingEnabled = true;
+    isTouchDragReady = true;
+    iconItem.style.cursor = 'grabbing';
+    iconItem.classList.add('shaking');
+    showToast('可以拖拽了（抖动中）', 'info');
+  }, DRAG_DELAY);
+}
+
+iconDiv.addEventListener('mousedown', handleStart);
+iconDiv.addEventListener('touchstart', handleStart); // 不再这里preventDefault
+
+iconDiv.addEventListener('touchmove', (e) => {
+  if (isTouchDragReady) {
+    e.preventDefault(); // 拖拽时阻止滚动
+  }
+});
+
+function handleEnd(e) {
+  clearTimeout(dragTimer);
+  if (currentDraggedElement) {
+    currentDraggedElement.querySelector('.icon').classList.remove('waiting');
+    currentDraggedElement.style.cursor = 'grab';
+    currentDraggedElement.classList.remove('shaking');
+  }
+
+  // 判断是否是点击
+  const touchDuration = e.timeStamp - touchStartTime;
+  if (touchDuration < DRAG_DELAY && !isDraggingEnabled) {
+    // 点击，执行跳转
+    if (item.url && item.url.trim().startsWith('http')) {
+      window.open(item.url, '_self');
+    } else {
+      showToast('图标URL无效！', 'error');
     }
+  }
+
+  isDraggingEnabled = false;
+  isTouchDragReady = false;
+  currentDraggedElement = null;
+  touchStartTime = 0;
+}
+
+document.addEventListener('mouseup', handleEnd);
+document.addEventListener('touchend', handleEnd);
+document.addEventListener('touchcancel', handleEnd);
 
     iconDiv.addEventListener('mousedown', handleStart);
     iconDiv.addEventListener('touchstart', (e) => {
