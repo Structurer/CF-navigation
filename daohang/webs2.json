@@ -77,15 +77,8 @@
         "backgroundColor": "#FF4500"
     },
     {
-        "name": "Obsidian",
-        "icon": "./icons/obsidian.svg",
-        "alt": "Obsi",
-        "url": "https://obsidian.md",
-        "backgroundColor": "#7C3AED"
-    },
-    {
         "name": "Claude",
-        "icon": "./icons/claude.svg",
+        "icon": "./icons/claude.png",
         "alt": "Claude",
         "url": "https://claude.ai",
         "backgroundColor": "#D97757"

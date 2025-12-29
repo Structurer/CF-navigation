@@ -175,6 +175,13 @@
         "backgroundColor": "#FFFFFF"
     },
     {
+        "name": "Obsidian",
+        "icon": "./icons/obsidian.webp",
+        "alt": "Obsi",
+        "url": "https://obsidian.md",
+        "backgroundColor": "#FFFFFF"
+    },
+    {
         "name": "vpsControl",
         "icon": "./icons/panel.svg",
         "alt": "Panel",
