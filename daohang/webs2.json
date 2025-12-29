@@ -52,14 +52,14 @@
         "name": "Gmail",
         "icon": "./icons/gmail.svg",
         "alt": "Gmail",
-        "url": "https://fonts.gstatic.com/s/i/productlogos/gmail_2020q4/v8/192px.svg",
+        "url": "https://gmail.com",
         "backgroundColor": "#EA4335"
     },
     {
         "name": "Steam",
         "icon": "./icons/steam.svg",
         "alt": "Steam",
-        "url": "https://partner.steamgames.com/doc/marketing/branding",
+        "url": "https://s.team",
         "backgroundColor": "#000000"
     },
     {
