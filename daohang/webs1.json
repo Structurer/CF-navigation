@@ -134,7 +134,7 @@
     },
     {
         "name": "RackNerd",
-        "icon": "./icons/RackNerd.png",
+        "icon": "./icons/racknerd.png",
         "alt": "Rack",
         "url": "https://www.racknerd.com/",
         "backgroundColor": "#FFA500"
