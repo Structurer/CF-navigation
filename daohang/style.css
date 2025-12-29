@@ -134,9 +134,6 @@ input:focus {
   cursor: grab;
   width: 80px;
   gap: 8px;
-
-  touch-action: none; /* 新增：只给图标项禁用触摸默认行为 */
-
 }
 .icon-item:active {
   cursor: grabbing;
