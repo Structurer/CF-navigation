@@ -123,7 +123,7 @@ function renderIcons(iconWrap, iconsData, columnKey) {
         isTouchDragReady = true; // 移动端标记已准备好拖拽
         iconItem.style.cursor = 'grabbing';
         iconItem.classList.add('shaking');
-        showToast('可以拖拽了（抖动中）', 'info');
+        showToast('可以拖拽了', 'info');
       }, DRAG_DELAY);
     }
 
