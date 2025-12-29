@@ -50,7 +50,7 @@
     },
     {
         "name": "Cloudflare",
-        "icon": "./icons/cloudfare.webp",
+        "icon": "./icons/cloudflare.svg",
         "alt": "Cloudflare",
         "url": "https://www.cloudflare.com",
         "backgroundColor": "#F38020"
