@@ -25,6 +25,9 @@ let importExportTargetCol = null;
 let dragTimer = null;
 let isDraggingEnabled = false;
 let currentDraggedElement = null;
+// 新增：移动端触摸状态
+let touchStartTime = 0;
+let isTouchDragReady = false;
 
 // 页面DOM元素初始化（图标容器、上下栏）
 const container = document.getElementById('icon-container');
@@ -102,37 +105,65 @@ function renderIcons(iconWrap, iconsData, columnKey) {
       }
     };
 
-    // 拖拽延迟处理
-    iconDiv.addEventListener('mousedown', (e) => {
-      // 右键点击不触发拖拽
-      if (e.button === 2) return;
-      
+    // ===============================
+    // 统一处理开始事件（鼠标+触摸）
+    // ===============================
+    function handleStart(e) {
+      // 右键或多点触摸不触发
+      if (e.button === 2 || (e.type === 'touchstart' && e.touches.length > 1)) return;
+
       currentDraggedElement = iconItem;
       iconDiv.classList.add('waiting');
-      
+
+      touchStartTime = e.timeStamp;
+      isTouchDragReady = false;
+
       dragTimer = setTimeout(() => {
         isDraggingEnabled = true;
+        isTouchDragReady = true; // 移动端标记已准备好拖拽
         iconItem.style.cursor = 'grabbing';
-        // 开始拖拽时添加抖动效果
         iconItem.classList.add('shaking');
         showToast('可以拖拽了（抖动中）', 'info');
       }, DRAG_DELAY);
+    }
+
+    iconDiv.addEventListener('mousedown', handleStart);
+    iconDiv.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // 阻止触摸默认行为（如图片放大）
+      handleStart(e);
     });
-    
-    // 鼠标释放时重置拖拽状态和抖动效果
-    document.addEventListener('mouseup', () => {
+
+    // ===============================
+    // 触摸移动事件（移动端）
+    // ===============================
+    iconDiv.addEventListener('touchmove', (e) => {
+      if (!isTouchDragReady) return; // 未到延迟时间，允许滚动
+      e.preventDefault(); // 已准备好拖拽，阻止系统滚动
+    });
+
+    // ===============================
+    // 结束事件（鼠标+触摸）
+    // ===============================
+    function handleEnd() {
       clearTimeout(dragTimer);
       if (currentDraggedElement) {
         currentDraggedElement.querySelector('.icon').classList.remove('waiting');
         currentDraggedElement.style.cursor = 'grab';
-        // 结束拖拽时移除抖动效果
         currentDraggedElement.classList.remove('shaking');
       }
       isDraggingEnabled = false;
+      isTouchDragReady = false;
       currentDraggedElement = null;
-    });
-    
-    // 鼠标移动超出元素时重置拖拽状态
+      touchStartTime = 0;
+    }
+
+    document.addEventListener('mouseup', handleEnd);
+    document.addEventListener('touchend', handleEnd);
+    document.addEventListener('touchcancel', handleEnd); // 意外中断
+
+    // ===============================
+    // 鼠标移出重置
+    // ===============================
     iconItem.addEventListener('mouseleave', () => {
       if (!isDraggingEnabled) {
         clearTimeout(dragTimer);
@@ -143,10 +174,9 @@ function renderIcons(iconWrap, iconsData, columnKey) {
       }
     });
 
-    // 绑定右键菜单
+    // 右键菜单部分保持原样...
     const rightMenu = createRightClickMenu(columnKey, idx, item);
     iconItem.appendChild(rightMenu);
-    // 右键菜单位置校准（防止超出屏幕）
     iconItem.oncontextmenu = (e) => {
       e.preventDefault();
       document.querySelectorAll('.right-click-menu').forEach(menu => menu.classList.remove('show'));
@@ -172,12 +202,11 @@ function renderIcons(iconWrap, iconsData, columnKey) {
   });
 }
 
-// 5. 右键菜单创建：核心防串模块，导入/导出时锁定当前模块
+// 5. 右键菜单创建：导入/导出时锁定当前模块
 function createRightClickMenu(columnKey, idx, item) {
   const menu = document.createElement('ul');
   menu.className = 'right-click-menu';
 
-  // 编辑图标
   const editLi = document.createElement('li');
   editLi.textContent = '编辑图标';
   editLi.onclick = () => {
@@ -186,7 +215,6 @@ function createRightClickMenu(columnKey, idx, item) {
     openEditModal();
   };
 
-  // 新增图标
   const addLi = document.createElement('li');
   addLi.textContent = '添加图标';
   addLi.onclick = () => {
@@ -195,7 +223,6 @@ function createRightClickMenu(columnKey, idx, item) {
     openAddModal(columnKey === STORAGE_KEY_COL1 ? '上栏' : '下栏');
   };
 
-  // 删除图标
   const delLi = document.createElement('li');
   delLi.textContent = '删除图标';
   delLi.onclick = () => {
@@ -204,7 +231,6 @@ function createRightClickMenu(columnKey, idx, item) {
     openDeleteModal();
   };
 
-  // 导入本栏数据：点击即锁定当前模块
   const importLi = document.createElement('li');
   importLi.textContent = '导入本栏数据';
   importLi.onclick = () => {
@@ -213,7 +239,6 @@ function createRightClickMenu(columnKey, idx, item) {
     document.getElementById('fileInput').click();
   };
 
-  // 导出本栏数据：点击即锁定当前模块，直接导出
   const exportLi = document.createElement('li');
   exportLi.textContent = '导出本栏数据';
   exportLi.onclick = () => {
@@ -229,31 +254,32 @@ function createRightClickMenu(columnKey, idx, item) {
   menu.appendChild(importLi);
   menu.appendChild(exportLi);
 
-  // 点击空白处关闭右键菜单
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.icon-item')) menu.classList.remove('show');
+  document.addEventListener('click', () => {
+    if (!event.target.closest('.icon-item')) menu.classList.remove('show');
   });
   return menu;
 }
 
-// 6. 颜色预设初始化：生成颜色选择器预设色块
+// 颜色预设初始化
 const urlInput = document.getElementById('urlInput');
 const iconInput = document.getElementById('iconInput');
 const colorPicker = document.getElementById('colorPicker');
 const colorPresets = document.getElementById('colorPresets');
 initColorPresets();
-// URL自动补全https：输入时自动补全协议头
+
 urlInput.addEventListener('blur', () => {
   const url = urlInput.value.trim();
   if (!url) return;
   urlInput.value = fixUrlPrefix(url);
 });
+
 function fixUrlPrefix(url) {
   if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('file://')) {
     return url;
   }
   return `https://${url}`;
 }
+
 function initColorPresets() {
   colorPresets.innerHTML = '';
   DEFAULT_COLOR_PRESETS.forEach(color => {
@@ -271,7 +297,7 @@ function initColorPresets() {
     setActiveColorPreset(colorPicker.value);
   });
 }
-// 选中颜色预设时高亮
+
 function setActiveColorPreset(targetColor) {
   document.querySelectorAll('.color-preset-item').forEach(item => {
     item.classList.remove('active');
@@ -281,7 +307,7 @@ function setActiveColorPreset(targetColor) {
   });
 }
 
-// 7. 编辑图标回显：编辑时填充原有数据到弹窗
+// 编辑图标回显
 function fillEditForm(data) {
   urlInput.value = data.url || '';
   document.getElementById('nameInput').value = data.name || '';
@@ -292,7 +318,7 @@ function fillEditForm(data) {
   iconInput.value = data.icon || DEFAULT_ICON_PREFIX;
 }
 
-// 8. 导入数据：仅导入锁定模块，防串栏，导入后释放锁定
+// 导入数据
 function handleFileImport(event) {
   const file = event.target.files[0];
   if (!file || !importExportTargetCol) {
@@ -305,15 +331,12 @@ function handleFileImport(event) {
   reader.onload = function(e) {
     try {
       let data = JSON.parse(e.target.result);
-      // 导入数据自动补全ID
       data = data.map(icon => {
         if (!icon.id) icon.id = generateId();
         return icon;
       });
-      // 仅写入锁定的模块
       setIconsToStorage(importExportTargetCol, data);
       refreshIconsRender();
-      // 提示对应模块导入成功
       const colName = importExportTargetCol === STORAGE_KEY_COL1 ? '上栏' : '下栏';
       showToast(`${colName}成功导入 ${data.length} 个图标数据`, 'success');
     } catch (err) {
@@ -325,7 +348,7 @@ function handleFileImport(event) {
   reader.readAsText(file);
 }
 
-// 9. 页面初始化：加载时自动读取webs1.json/webs2.json初始化图标
+// 页面初始化
 async function initIcons() {
   const col1Data = getIconsFromStorage(STORAGE_KEY_COL1);
   if (col1Data.length === 0) {
@@ -356,11 +379,10 @@ async function initIcons() {
   } else {
     renderIcons(iconWrap2, col2Data, STORAGE_KEY_COL2);
   }
-  // 初始化拖拽排序
   initCrossColumnSortable();
 }
 
-// 10. 拖拽排序：支持同栏/跨栏拖拽，排序后数据同步本地存储
+// 拖拽排序
 function initCrossColumnSortable() {
   const sortableConfig = {
     group: 'nav-icons-group',
@@ -370,32 +392,26 @@ function initCrossColumnSortable() {
     handle: '.icon',
     forceFallback: true,
     fallbackClass: 'dragging',
-    delay: 500, // 按住图标后延迟500毫秒（0.5秒）才可开始拖动
+    delay: 500,
     onStart: (evt) => {
-      // 开始拖拽时添加抖动效果（兼容SortableJS的拖拽事件）
       evt.item.classList.add('shaking');
     },
     onEnd: (evt) => {
-      // 结束拖拽时移除抖动效果
       evt.item.classList.remove('shaking');
-      
       const fromWrap = evt.from;
       const toWrap = evt.to;
       const fromKey = fromWrap === iconWrap1 ? STORAGE_KEY_COL1 : STORAGE_KEY_COL2;
       const toKey = toWrap === iconWrap1 ? STORAGE_KEY_COL1 : STORAGE_KEY_COL2;
-      // 从DOM中读取排序后的图标数据
       const getIconsFromDom = (wrap) => {
         return [...wrap.querySelectorAll('.icon-item')].map(item => {
           return JSON.parse(item.dataset.iconData);
         });
       };
-      // 同栏排序
       if (fromKey === toKey) {
         const newIcons = getIconsFromDom(toWrap);
         setIconsToStorage(toKey, newIcons);
         showToast('同栏排序成功！', 'success');
       } else {
-        // 跨栏排序
         const fromNewIcons = getIconsFromDom(fromWrap);
         const toNewIcons = getIconsFromDom(toWrap);
         setIconsToStorage(fromKey, fromNewIcons);
@@ -409,7 +425,7 @@ function initCrossColumnSortable() {
   new Sortable(iconWrap2, sortableConfig);
 }
 
-// 11. 新增图标弹窗：打开弹窗并重置表单
+// 弹窗操作
 function openAddModal(colName) {
   document.getElementById('modalTitle').textContent = `添加${colName}图标`;
   document.getElementById('modalSubmitBtn').textContent = '保存（即时生效）';
@@ -418,7 +434,6 @@ function openAddModal(colName) {
   urlInput.focus();
 }
 
-// 12. 编辑图标弹窗：打开弹窗并回显数据
 function openEditModal() {
   document.getElementById('modalTitle').textContent = '编辑图标';
   document.getElementById('modalSubmitBtn').textContent = '保存修改';
@@ -426,7 +441,6 @@ function openEditModal() {
   document.getElementById('iconModal').style.display = 'flex';
 }
 
-// 13. 删除图标：唯一ID+索引双重兜底，精准删除，不串模块
 function openDeleteModal() {
   const modal = document.getElementById('deleteModal');
   modal.style.display = 'flex';
@@ -434,19 +448,17 @@ function openDeleteModal() {
   confirmBtn.onclick = () => {
     const { targetCol, index, data } = currentOptData;
     if (!targetCol) {
-      showToast('删除失败：未选中有效栏位！', 'error');
+      showToast('删除失败：请右键对应模块后再删除！', 'error');
       modal.style.display = 'none';
       return;
     }
     let oldIcons = getIconsFromStorage(targetCol);
     let deleted = false;
-    // 优先用唯一ID删除（核心）
     if (data && data.id) {
       const originLength = oldIcons.length;
       oldIcons = oldIcons.filter(icon => icon.id !== data.id);
       if (oldIcons.length < originLength) deleted = true;
     }
-    // ID失效时，索引兜底删除
     if (!deleted && index >= 0 && index < oldIcons.length) {
       oldIcons.splice(index, 1);
       deleted = true;
@@ -462,13 +474,11 @@ function openDeleteModal() {
   };
 }
 
-// 14. 关闭弹窗：关闭所有弹窗
 function closeModal() {
   document.getElementById('iconModal').style.display = 'none';
   document.getElementById('deleteModal').style.display = 'none';
 }
 
-// 15. 重置表单：新增图标时重置弹窗输入框
 function resetForm() {
   urlInput.value = '';
   document.getElementById('nameInput').value = '';
@@ -478,7 +488,6 @@ function resetForm() {
   iconInput.value = DEFAULT_ICON_PREFIX;
 }
 
-// 16. 保存图标（新增/编辑）：自动生成/保留ID，同步本地存储
 function submitIcon() {
   const url = urlInput.value.trim();
   const name = document.getElementById('nameInput').value.trim();
@@ -486,13 +495,11 @@ function submitIcon() {
   const alt = document.getElementById('altInput').value.trim();
   const iconPath = iconInput.value.trim();
   const targetCol = currentOptData.targetCol;
-  // 校验必填项
   if (!url || !name || !alt || !iconPath) {
     showToast('请填写所有必填项！', 'error');
     return;
   }
   const fixedUrl = fixUrlPrefix(url);
-  // 新增图标生成ID，编辑图标保留原有ID
   const newIcon = {
     id: currentOptData.type === 'edit' && currentOptData.data.id ? currentOptData.data.id : generateId(),
     name,
@@ -507,7 +514,6 @@ function submitIcon() {
     const colName = targetCol === STORAGE_KEY_COL1 ? '上栏' : '下栏';
     showToast(`${colName}图标添加成功！`, 'success');
   } else {
-    // 编辑时优先用ID查找替换
     const editIdx = oldIcons.findIndex(icon => icon.id === newIcon.id);
     if (editIdx >= 0) {
       oldIcons[editIdx] = newIcon;
@@ -521,7 +527,6 @@ function submitIcon() {
   closeModal();
 }
 
-// 17. 刷新图标渲染：重新加载两个模块的图标数据
 function refreshIconsRender() {
   const col1Data = getIconsFromStorage(STORAGE_KEY_COL1);
   renderIcons(iconWrap1, col1Data, STORAGE_KEY_COL1);
@@ -530,7 +535,6 @@ function refreshIconsRender() {
   initCrossColumnSortable();
 }
 
-// 18. 提示框：显示操作结果提示，3秒后自动消失
 function showToast(message, type = 'info') {
   const toast = document.getElementById('toast');
   toast.textContent = message;
@@ -539,10 +543,9 @@ function showToast(message, type = 'info') {
   setTimeout(() => { toast.classList.remove('show'); }, 3000);
 }
 
-// 19. 导出数据：仅导出锁定模块，文件名称与模块严格对应（col1=webs1，col2=webs2）
 function exportColumnIcons(targetCol) {
   if (![STORAGE_KEY_COL1, STORAGE_KEY_COL2].includes(targetCol)) {
-    showToast('导出失败：请右键对应模块后导出！', 'error');
+    showToast('导出失败：请右键对应模块后再导出！', 'error');
     return;
   }
   const colIcons = getIconsFromStorage(targetCol);
@@ -561,9 +564,8 @@ function exportColumnIcons(targetCol) {
 
 // 页面加载完成后初始化图标
 window.addEventListener('DOMContentLoaded', () => {
-  initIcons(); // 原来的图标初始化
+  initIcons();
 
-  // 搜索框事件绑定
   const baiduButton = document.getElementById('baidusearchButton');
   const googleButton = document.getElementById('googleButton');
   const searchInput = document.getElementById('searchInput');
