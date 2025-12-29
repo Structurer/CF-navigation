@@ -129,7 +129,7 @@
         "name": "OneDrive",
         "icon": "./icons/OneDrive.webp",
         "alt": "Drive",
-        "url": "https://onedrive.live.com",
+        "url": "https://onedrive.com",
         "backgroundColor": "#0078D4"
     },
     {
@@ -172,14 +172,14 @@
         "icon": "./icons/diary.png",
         "alt": "diary",
         "url": "https://1diary.me",
-        "backgroundColor": "#00cc99"
+        "backgroundColor": "#FFFFFF"
     },
     {
         "name": "Bitwarden",
         "icon": "./icons/bitwarden.webp",
         "alt": "BW",
         "url": "https://bitwarden.com/brand",
-        "backgroundColor": "#175DDC"
+        "backgroundColor": "#FFFFFF"
     },
     {
         "name": "wo邮箱",
