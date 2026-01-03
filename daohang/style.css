@@ -138,6 +138,7 @@ input:focus {
 .icon-item:active {
   cursor: grabbing;
 }
+/* 图标样式 */
 .icon {
   width: 56px;
   height: 56px;
@@ -145,11 +146,19 @@ input:focus {
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); /* 修改为与test.html一致 */
+  background-color: #fff; /* 添加白色背景 */
   transition: transform 0.3s, box-shadow 0.3s;
-
   touch-action: none; /* 新增：给图标容器再加一层保障 */
+}
 
+/* 上传预览样式 */
+.upload-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 120px; /* 添加固定高度 */
 }
 .icon:hover {
   transform: scale(1.1);
@@ -214,6 +223,8 @@ input:focus {
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
+  max-height: 80vh; /* 限制最大高度为视口的80% */
+  overflow-y: auto; /* 添加垂直滚动条 */
   box-shadow: 0 5px 25px rgba(0,0,0,0.3);
 }
 .modal-title {
@@ -230,7 +241,8 @@ input:focus {
   color: #333;
   margin-bottom: 6px;
 }
-.modal input {
+.modal input,
+.modal select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ddd;
@@ -239,9 +251,65 @@ input:focus {
   font-size: 15px;
   transition: border 0.2s;
 }
-.modal input:focus {
+.modal input:focus,
+.modal select:focus {
   border-color: #7fc4ff;
   box-shadow: 0 0 0 2px rgba(127, 196, 255, 0.2);
+}
+.category-select-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.category-presets {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.category-preset-item {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #f0f0f0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.category-preset-item:hover, .category-preset-item.active {
+  border-color: #333;
+  background-color: #e0e0e0;
+}
+.category-preset-item.empty {
+  background-color: #f9f9f9;
+  color: #999;
+  cursor: not-allowed;
+}
+.category-preset-item.add-new {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: bold;
+}
+.category-preset-item.add-new:hover {
+  background-color: #bbdefb;
+  border-color: #1976d2;
+}
+.category-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 15px;
+  transition: border 0.2s;
 }
 
 /* 颜色选择器样式 */
@@ -314,16 +382,21 @@ input:focus {
   background: #fff;
   border-radius: 6px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  width: 120px;
+  min-width: 120px;
+  max-width: 300px;
+  width: auto;
   z-index: 998;
   padding: 5px 0;
 }
 .right-click-menu.show { display: block; }
 .right-click-menu li {
   list-style: none;
-  padding: 8px 12px;
+  padding: 8px 16px;
   cursor: pointer;
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .right-click-menu li:hover { background: #f1f3f4; }
 
@@ -351,7 +424,92 @@ input:focus {
 }
 
 /* 隐藏导入文件输入框 */
-#fileInput { display: none; }
+#fileInput {
+  display: none;
+}
+
+/* 密码模态框样式 */
+.password-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.password-modal.show {
+  display: flex;
+}
+
+.password-modal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.password-modal-content h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.password-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #4cafef;
+  box-shadow: 0 0 0 2px rgba(76, 175, 239, 0.2);
+}
+
+.password-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.password-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.password-button.submit {
+  background: #4cafef;
+  color: white;
+}
+
+.password-button.submit:hover {
+  background: #3599d6;
+}
+
+.password-button.cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.password-button.cancel:hover {
+  background: #e0e0e0;
+}
 
 /* 抖动动画 - 模拟苹果手机图标抖动效果 */
 @keyframes shake {
@@ -364,3 +522,198 @@ input:focus {
 .icon-item.shaking .icon {
   animation: shake 0.2s infinite ease-in-out;
 }
+
+/* 拖拽上传区域样式 */
+.drag-upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  height: 120px; /* 固定高度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin: 10px 0;
+  position: relative;
+}
+
+.drag-upload-area:hover,
+.drag-upload-area.drag-over {
+  border-color: #007bff;
+  background: #f0f8ff;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px; /* 减小间距 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 0 10px;
+  max-width: 90%;
+}
+
+.upload-icon {
+  font-size: 24px; /* 减小图标大小 */
+  opacity: 0.6;
+}
+
+.upload-text {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* 上传提示文字样式 */
+.upload-hint {
+  font-size: 10px; /* 减小字体大小 */
+  color: #999;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+/* 上传预览样式 */
+.upload-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 预览图标容器样式 - 不缩放，作为删除按钮的定位基准 */
+.upload-preview-icon-container {
+  position: relative;
+  cursor: pointer;
+}
+
+/* 预览图标样式 - 只缩放图标本身，悬停效果与普通图标一致 */
+.upload-preview-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 悬停效果与普通图标完全一致 */
+.upload-preview-icon-container:hover .upload-preview-icon {
+  transform: scale(1.1); /* 与普通图标一致 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); /* 与普通图标一致 */
+}
+
+/* 删除按钮样式 - 相对于不缩放的容器定位 */
+.delete-preview-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ff3838;
+  color: white;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+  z-index: 10;
+  line-height: 1;
+  padding: 0;
+  text-align: center;
+  /* 精确控制字符位置 */
+  transform: translateZ(0);
+  /* 确保删除按钮始终显示在最上层 */
+  z-index: 100;
+}
+
+.delete-preview-btn:hover {
+  background-color: #ff0000;
+  transform: scale(1.1) translateZ(0);
+  /* 增强悬停效果 */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* 预览标签样式 */
+.preview-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+/* 预览项样式 */
+.upload-preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+/* 选中状态样式 */
+.upload-preview-item.selected {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  background-color: #e3f2fd;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* 点击预览项切换选中状态 */
+.upload-preview-item:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+/* 上传图标占位样式 */
+.upload-icon-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  border: 2px dashed #ccc;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-icon-placeholder span {
+  font-size: 24px;
+  color: #999;
+  font-weight: bold;
+}
+
+.upload-icon-placeholder:hover {
+  border-color: #007bff;
+  background: #f0f8ff;
+  color: #007bff;
+}
+
+/* 预览图片样式 */
+#previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 16px;
+}
+
+/* 删除垃圾桶相关样式 */
