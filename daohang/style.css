@@ -25,9 +25,13 @@ html, body {
   flex-direction: column;
 }
 
-/* 顶部搜索栏 */
+/* 顶部搜索栏 - 网格图案背景 */
 .top-section {
-  background: linear-gradient(135deg, #b9e0ff 0%, #9fcfff 100%);
+  background-color: #e0e7ff;
+  background-image: 
+    linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+  background-size: 16px 16px;
   height: 25vh;
   min-height: 180px;
   display: flex;
@@ -90,9 +94,11 @@ input:focus {
   background: #6bbfff;
 }
 
-/* 底部图标展示区 */
+/* 底部图标展示区 - 波点图案背景 */
 .bottom-section {
-  background-color: #ebf7ff;
+  background-color: #f5f3ff;
+  background-image: radial-gradient(circle, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  background-size: 16px 16px;
   padding-top: 30px;
   flex: 1;
   overflow-y: auto;
