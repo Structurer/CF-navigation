@@ -1,4 +1,4 @@
-// 导航页主入口文件 - 合并版
+﻿// 导航页主入口文件 - 合并版
 
 // ==========================
 // 工具函数模块 (utils.js)
@@ -1024,68 +1024,19 @@ function updatePreviewSelection() {
 // 尝试获取网站的favicon图标
 async function tryGetFavicon(url) {
   try {
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname;
-    
-    // 使用Google的favicon服务，它支持跨域访问
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-    
-    // 尝试加载Google提供的favicon
-    try {
-      // 使用Image对象尝试加载favicon
-      const img = new Image();
-      
-      // 设置超时
-      const loadPromise = new Promise((resolve, reject) => {
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error('Failed to load favicon from Google'));
-        img.onabort = () => reject(new Error('Favicon load aborted'));
-      });
-      
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Favicon load timeout')), 2000);
-      });
-      
-      img.src = googleFaviconUrl;
-      
-      // 等待加载完成或超时
-      const loadedImg = await Promise.race([loadPromise, timeoutPromise]);
-      
-      // 将图片转换为Base64
-      const base64 = await imageToBase64(loadedImg);
-      
-      // 保存到全局变量
-      window.uploadedBase64 = base64;
-      
-      return; // 成功获取favicon
-    } catch (error) {
-      console.warn(`Failed to load favicon from Google: ${error.message}`);
-      
-      // 如果Google的服务不可用，尝试使用直接链接
-      const domainUrl = urlObj.origin;
-      const directFaviconUrl = `${domainUrl}/favicon.ico`;
-      
-      const img = new Image();
-      
-      const loadPromise = new Promise((resolve, reject) => {
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error('Failed to load direct favicon'));
-        img.onabort = () => reject(new Error('Direct favicon load aborted'));
-      });
-      
-      img.src = directFaviconUrl;
-      
-      try {
-        const loadedImg = await Promise.race([loadPromise, timeoutPromise]);
-        const base64 = await imageToBase64(loadedImg);
-        window.uploadedBase64 = base64;
-      } catch (directError) {
-        console.warn(`Failed to load direct favicon: ${directError.message}`);
-      }
+    const apiUrl = "/api/favicon?url=" + encodeURIComponent(url);
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+    });
+    const result = await response.json();
+    if (result.success && result.base64) {
+      window.uploadedBase64 = result.base64;
+    } else {
+      console.warn("Failed to get favicon:", result.error || "No favicon found");
     }
   } catch (error) {
-    // 忽略所有favicon获取错误，不影响其他功能
-    console.warn(`Error getting favicon: ${error.message}`);
+    console.warn("Error getting favicon:", error.message);
   }
 }
 
@@ -1294,9 +1245,13 @@ function initDomEvents() {
             // 只有当Alt文本为空时才自动填充
             if (!altInput.value.trim()) {
               altInput.value = title;
-              // 实时更新预览
-              updatePreviews();
             }
+            
+            // 尝试自动获取网站的favicon图标
+            await tryGetFavicon(fullUrl);
+            
+            // 实时更新预览
+            updatePreviews();
             
             showToast('网站标题提取成功！', 'success');
           } catch (error) {
@@ -1327,9 +1282,13 @@ function initDomEvents() {
             // 只有当Alt文本为空时才自动填充
             if (!altInput.value.trim()) {
               altInput.value = title;
-              // 实时更新预览
-              updatePreviews();
             }
+            
+            // 尝试自动获取网站的favicon图标
+            await tryGetFavicon(fullUrl);
+            
+            // 实时更新预览
+            updatePreviews();
           }
         }
         
