@@ -223,9 +223,14 @@ input:focus {
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
-  max-height: 80vh; /* 限制最大高度为视口的80% */
-  overflow-y: auto; /* 添加垂直滚动条 */
+  max-height: 80vh;
+  overflow-y: auto;
   box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.modal-content::-webkit-scrollbar {
+  display: none;
 }
 .modal-title {
   font-size: 20px;
