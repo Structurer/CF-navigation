@@ -7,7 +7,7 @@
 // 全局配置
 const CONFIG = {
   API_URL: 'http://127.0.0.1:8787',  // 本地开发服务器地址
-  CLOUD_API_URL: 'https://worker.ceshi.autos',  // 云端API地址
+  CLOUD_API_URL: '',  // 云端API地址
   API_KEY: 'Y0urC0mpl3xAP1K3y168'  // API密钥
 };
 
