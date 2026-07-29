@@ -1,235 +1,251 @@
-# 导航页改造项目
+# 导航页项目
 
-一个现代化的导航页，支持图标拖拽排序、Base64图标、操作记录、手动同步等功能。
+一个轻量级纯前端导航页，双栏图标布局、拖拽排序、本地存储、种子数据初始化，配合 Cloudflare Pages Function 自动获取网站图标。
 
 ## 功能特性
 
-### 核心基础功能
-- 双栏图标布局（k=1上栏、k=2下栏）
-- 图标拖拽/增删改
-- 本地存储
-- 图标3级兜底渲染（首选Base64→次选外链→兜底文字）
-- 右键菜单整合（共8项功能）
+### 核心功能
+- **双栏图标布局**：上栏（k=1）+ 下栏（k=2），独立管理
+- **图标增删改**：右键任意图标进行编辑、添加、删除
+- **拖拽排序**：支持同栏排序 + 跨栏移动，长按 200ms 触发，使用 Sortable.js
+- **本地持久化**：localStorage 单键存储，所有操作即时保存
+- **种子数据初始化**：首次加载时若本地无数据，自动从 `nav_data.json` 加载种子数据写入 localStorage
+- **自动获取网站图标**：部署到 Cloudflare Pages 后，输入网址按 Enter 或失焦，自动调 `/api/favicon` 获取网站 Favicon 并预览（Base64 写入 localStorage）
+- **图标 2 级兜底渲染**：Base64 图片 → alt 文字（带文字阴影）
+- **占位图标**：空栏自动显示「+」占位，右键添加图标自动归属对应栏位
+- **数据导出**：右键任意图标 → 导出 localStorage 最新数据为 JSON 文件
+- **搜索功能**：顶部搜索栏，支持 Google（Go 按钮）和百度（搜索按钮 / 回车）
+- **右键菜单 4 项**：编辑图标、添加图标、删除图标、导出数据
 
-### 核心新增/优化功能
-1. **Base64图标改造**
-   - 批量转换现有图标为Base64格式
-   - 单JSON存储全量数据，图标Base64与配置共存
-   - 前端JS自动转Base64，无需二次批量转换
+### 视觉特性
+- 12 种颜色预设 + 自定义取色器
+- 图标拖拽上传预览（Base64 内联存储）
+- 图标 hover 缩放动效、拖拽抖动动效
+- 文字预览与图片预览双模式
+- 移动端触摸长按触发
+- 响应式网格布局
 
-2. **手动同步+本地备份**
-   - 手动上传/下载（对接Cloudflare Workers+KV）
-   - 本地导入导出（兜底备份）
-   - 页面打开优先读本地存储渲染，无延迟
-
-3. **操作记录功能**
-   - 单JSON根节点新增`operateLog`数组
-   - 全覆盖4大核心操作（手动上传/下载、本地导入/导出）
-   - 最多存20条，新增记录插头部
-
-4. **占位图标功能**
-   - 双栏各自独立判断，单栏无真实图标时自动渲染占位图标
-   - 占位图标仅前端本地渲染，不写入JSON
-   - 支持右键触发菜单，点击新增图标自动归属对应栏位
-
-## 技术架构
-
-### 模块化结构
+## 项目结构
 
 ```
-├── app.js               # 主入口文件
-├── storage.js           # 数据存储模块
-├── api.js               # 云端API模块
-├── render.js            # 视图渲染模块
-├── utils.js             # 工具函数模块
-├── icons_to_base64.py   # 图标批量转换工具
-├── nav_data.json        # 图标数据文件
-└── icons/               # 图标资源目录
+CF-navigation/
+├── index.html              # 页面入口（搜索栏 + 图标容器 + 模态框）
+├── style.css               # 全部样式
+├── app-bundle.js           # 主逻辑（单文件，5 大模块分区）
+├── Sortable.min.js         # 第三方拖拽库
+├── nav_data.json           # 种子数据（首次加载时写入 localStorage）
+├── favicon.ico             # 站点图标
+└── functions/              # Cloudflare Pages Functions
+    └── api/
+        └── favicon.js      # GET /api/favicon?url=...  获取网站图标返回 Base64
 ```
 
-### 3层逻辑分层
+## 数据架构
 
-1. **数据层**
-   - 负责数据的存储和读取
-   - 包括本地存储和云端同步
-   - 对应文件：`storage.js`、`api.js`
+### 逻辑分层（app-bundle.js 内部分区）
 
-2. **业务逻辑层**
-   - 负责数据的处理和转换
-   - 包括图标管理、操作记录等
-   - 对应文件：`utils.js`
+| 分区 | 核心函数 | 职责 |
+|------|----------|------|
+| **工具层 utils** | `generateId`、`fixUrlPrefix`、`fileToBase64`、`showToast`、`initColorPresets`、`tryGetFavicon` | ID 生成、URL 处理、Base64 转换、提示、颜色预设、Favicon API 调用 |
+| **存储层 storage** | `getLocalStorageData`、`loadIcons`、`saveIcons`、`exportData` | localStorage 读写 + 种子数据回退 + 数据导出 |
+| **渲染层 render** | `renderIcons`、`createRightClickMenu`、`initCrossColumnSortable`、`openAddModal`、`openEditModal`、`openDeleteModal`、`checkPlaceholders`、`createPlaceholder` | 页面渲染 + 模态框 + 拖拽 + 右键菜单 |
+| **入口 main** | `initDomEvents`、`submitIcon`、`initDragUpload`、`handleFileUpload`、`DOMContentLoaded` | 初始化流程 |
 
-3. **视图层**
-   - 负责页面的渲染和用户交互
-   - 包括图标渲染、拖拽排序、右键菜单等
-   - 对应文件：`render.js`
+### 数据加载流程
+
+```
+页面加载
+  ↓
+loadIcons()
+  ↓
+localStorage 有数据？
+  ├── 是 → 直接读取 → 渲染
+  └── 否 → fetch('./nav_data.json')
+              ↓
+         写入 localStorage
+              ↓
+         读取 → 渲染
+```
+
+### 自动获取图标流程（部署到 Cloudflare Pages 后生效）
+
+```
+添加/编辑图标 → URL 输入框按 Enter 或失焦
+  ↓  (若用户尚未手动上传图片)
+GET /api/favicon?url=https://example.com
+  ↓
+Cloudflare Pages Function 按优先级尝试 7 个来源：
+  1. 目标网站 origin/favicon.ico（保留用户输入的 http/https）
+  2. 抓取目标网站 HTML，解析 <link rel="icon"> 自定义 URL
+  3. https://www.{host}/favicon.ico
+  4. https://{host}/favicon.ico
+  5. http://{host}/favicon.ico
+  6. Google S2 favicons（公共代理，sz=128）
+  7. DuckDuckGo ip3
+  ↓
+返回 { success: true, base64: "data:image/...", hostname }
+  ↓
+前端写入 window.uploadedBase64 → 更新预览 → 保存时写入 localStorage
+```
+
+### 数据结构
+
+```json
+{
+  "navList": [
+    {
+      "id": "唯一ID",
+      "k": 1,
+      "name": "网站名称",
+      "url": "https://...",
+      "alt": "图标替代文字",
+      "backgroundColor": "#4cafef",
+      "iconBase64": "data:image/png;base64,..."
+    }
+  ],
+  "operateLog": []
+}
+```
+
+字段说明：
+- `id`：唯一标识（Date.now().toString(36) + 随机数）
+- `k`：栏位（1=上栏，2=下栏）
+- `iconBase64`：Base64 图标（null 时渲染 alt 文字兜底；可由 `/api/favicon` 自动填充）
+- `operateLog`：保留字段
+
+### 存储机制
+- **存储键**：`STORAGE_KEY = 'nav_data'`（单键，无冗余）
+- **存储位置**：浏览器 localStorage
+- **写入时机**：添加 / 删除 / 修改 / 拖拽排序后即时写入
+- **种子数据**：`nav_data.json`（首次加载备份）
 
 ## 快速开始
 
-### 1. 安装依赖
+### 本地开发（无自动图标抓取）
 
 ```bash
-# 无需安装依赖，使用浏览器直接打开
-```
-
-### 2. 启动本地服务器
-
-```bash
-# 使用Python启动本地服务器
+# 方式一：Python
 python -m http.server 8000
 
-# 或使用Node.js启动
+# 方式二：Node.js
 npx serve
-
-# 或使用其他方式启动
 ```
 
-### 3. 访问页面
+> ⚠️ **注意**：不能直接用 `file://` 打开，因为需要 fetch 加载 nav_data.json 种子数据，必须通过 HTTP 服务器访问。
+> 本地普通 HTTP server 不会执行 Pages Functions，因此 `/api/favicon` 会 404，不影响主功能（自动获取图标会静默失败）。
 
-在浏览器中访问：`http://localhost:8000`
+### 本地调试（带 Functions / 带自动图标抓取）
+
+使用 Cloudflare Wrangler 本地模拟 Pages 环境：
+
+```bash
+npm i -g wrangler
+wrangler pages dev . --port 8788
+# → http://localhost:8788
+# 此时 /api/favicon?url=https://github.com 可正常返回 Base64
+```
+
+### 访问页面
+
+浏览器访问：`http://localhost:8000` 或 wrangler 启动的端口
+
+## Cloudflare Pages 部署
+
+### 方式一：连接 Git 仓库（推荐）
+
+1. 登录 Cloudflare Dashboard → Workers & Pages → **Create** → **Pages** → **Connect to Git**
+2. 选择本仓库 → **Begin setup**
+3. 构建设置：
+   - **Framework preset**：`None`
+   - **Build command**：留空（纯静态项目，无需构建）
+   - **Build output directory**：`/`
+4. **Save and Deploy**，等待部署完成
+5. 访问 `https://<项目名>.pages.dev`，`functions/api/favicon.js` 会自动挂载到 `/api/favicon` 路由
+
+### 方式二：直接上传目录
+
+```bash
+npm i -g wrangler
+wrangler login
+wrangler pages deploy . --project-name=cf-navigation
+```
+
+### API 验证
+
+部署完成后，浏览器测试：
+
+```
+https://<项目名>.pages.dev/api/favicon?url=https://github.com
+```
+
+返回示例：
+
+```json
+{
+  "success": true,
+  "hostname": "github.com",
+  "base64": "data:image/png;base64,iVBORw0KGgo...",
+  "size": 1842
+}
+```
 
 ## 使用指南
 
-### 1. 图标管理
+### 图标管理
 
 #### 添加图标
-- 右键点击图标或占位图标，选择"添加图标"
-- 填写图标信息，支持拖拽上传图标
-- 点击"保存（即时生效）"完成添加
+1. 右键点击任意图标（或空栏占位符）→ **添加图标**
+2. 填写字段：
+   - **网站地址（URL）**：按 Enter 自动补全 http/https 前缀，并从域名提取网站名称；同时自动调用 `/api/favicon` 获取网站 Favicon（CF Pages 部署后生效）
+   - **网站名称**：按 Enter / Tab 自动填充 alt 文字（仅当 alt 为空时）
+   - **图标替代文字（alt）**：图标加载失败时的兜底文字
+   - **图标背景色**：12 种预设色 + 自定义取色
+   - **图标上传**：拖拽或点击右侧预览上传图片（转为 Base64 存储；若已自动获取图标则此步可跳过）
+3. 点击「保存（即时生效）」完成
 
 #### 编辑图标
-- 右键点击图标，选择"编辑图标"
-- 修改图标信息，点击"保存修改"完成编辑
+1. 右键点击目标图标 → **编辑图标**
+2. 修改 URL 后按 Enter 或失焦，会自动重新拉取该网址图标（若已手动上传图片会保留手动的）
+3. 修改后点击「保存（即时生效）」
 
 #### 删除图标
-- 右键点击图标，选择"删除图标"
-- 在确认弹窗中点击"确认删除"完成删除
+1. 右键点击目标图标 → **删除图标**
+2. 在确认弹窗点击「确认删除」
 
 #### 拖拽排序
-- 长按图标直到图标开始抖动
-- 拖拽图标到目标位置
-- 松开鼠标完成排序
+1. 长按图标 200ms（图标开始抖动，出现「可以拖拽了」提示）
+2. 拖拽到目标位置（支持跨栏移动）
+3. 松开鼠标完成排序
 
-### 2. 数据管理
+### 数据导出
+- 右键点击任意图标 → **导出数据**
+- 自动下载 `nav_data_YYYY-MM-DD.json`（含 localStorage 最新数据，格式缩进 2 空格）
 
-#### 导出数据
-- 右键点击任意图标，选择"导出数据"
-- 浏览器会自动下载`nav_data.json`文件
+### 搜索
+- 输入关键词 → 按「搜索」按钮或回车 → 百度搜索
+- 按「Go」按钮 → Google 搜索
 
-#### 导入数据
-- 右键点击任意图标，选择"导入数据"
-- 选择本地的`nav_data.json`文件
-- 数据会覆盖本地存储
+### 占位图标
+- 空栏时自动显示「上栏占位」或「下栏占位」图标
+- 右键占位图标 → 添加图标，新图标自动归属对应栏位
+- 占位图标右键菜单不显示「删除图标」
 
-#### 手动上传到云端
-- 右键点击任意图标，选择"手动上传"
-- 数据会上传到Cloudflare Workers+KV
+## 配置常量
 
-#### 手动从云端下载
-- 右键点击任意图标，选择"手动下载"
-- 数据会从Cloudflare Workers+KV下载并覆盖本地存储
-
-### 3. 查看操作记录
-
-- 右键点击任意图标，选择"查看操作记录"
-- 在弹窗中查看最近20条操作记录
-
-## 开发指南
-
-### 模块化开发
-
-1. **添加新功能**
-   - 确定功能所属的模块
-   - 在对应模块文件中添加功能代码
-   - 在主入口文件中暴露功能
-
-2. **修改现有功能**
-   - 找到功能所在的模块文件
-   - 修改对应代码
-   - 测试功能是否正常
-
-3. **调试**
-   - 使用浏览器的开发者工具调试
-   - 查看控制台输出
-   - 使用`console.log`打印调试信息
-
-### 图标批量转换
-
-使用Python工具将现有图标转换为Base64格式：
-
-```bash
-# 安装依赖（如果需要）
-pip install base64
-
-# 运行转换工具
-python icons_to_base64.py
-
-# 查看帮助
-python icons_to_base64.py --help
-
-# 自定义转换参数
-python icons_to_base64.py -i ./icons -o nav_data.json -k 1 -b #4cafef
-```
-
-## 配置说明
-
-### Cloudflare Workers配置
-
-在`api.js`文件中修改以下配置：
-
-```javascript
-const API_CONFIG = {
-  BASE_URL: '', // 替换为你的Cloudflare Workers URL
-  API_KEY: '' // 替换为你的API密钥
-};
-```
-
-### 常量配置
-
-在各个模块文件中可以修改以下常量：
-
-| 常量名称 | 说明 | 默认值 | 所在文件 |
-|---------|------|--------|----------|
-| STORAGE_KEY | 本地存储键 | 'nav_data' | storage.js |
-| STORAGE_KEY_BASE64 | Base64版本存储键 | 'nav_data_base64' | storage.js |
-| DEFAULT_ICON_PREFIX | 默认图标前缀 | './icons/' | storage.js |
-| DEFAULT_COLOR_PRESETS | 默认颜色预设 | 12种颜色 | utils.js |
-| DRAG_DELAY | 拖拽延迟时间 | 200ms | render.js |
+| 常量 | 默认值 | 说明 | 位置 |
+|------|--------|------|------|
+| `STORAGE_KEY` | `'nav_data'` | localStorage 存储键 | app-bundle.js |
+| `DRAG_DELAY` | `200` | 拖拽触发延迟（毫秒） | app-bundle.js |
+| `DEFAULT_COLOR_PRESETS` | 12 色 | 颜色预设数组 | app-bundle.js `initColorPresets` |
+| `TIMEOUT_MS` | `5000` | favicon 抓取超时（毫秒） | functions/api/favicon.js |
 
 ## 浏览器兼容性
 
-- Chrome (推荐)
+- Chrome（推荐）
 - Firefox
 - Safari
 - Edge
 
-## 后续迁移计划
-
-### Vue迁移指南
-
-1. **数据结构复用**
-   - 直接复用现有的JSON数据结构
-   - 无需修改数据格式
-
-2. **组件拆分**
-   - 根组件App
-   - IconItem组件
-   - PlaceholderItem组件
-   - ContextMenu组件
-
-3. **状态管理**
-   - 使用Vue的响应式数据
-   - 无需手动操作DOM
-
-4. **渐进式迁移**
-   - 先完成原生JS全功能落地
-   - 熟悉所有业务逻辑后再迁移Vue
-   - 迁移时直接复用现有数据结构
-
 ## 许可证
 
 MIT License
-
-## 贡献
-
-欢迎提交Issue和Pull Request！
