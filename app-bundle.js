@@ -447,8 +447,8 @@ function createRightClickMenu(columnKey, idx, item) {
     exportData();
   };
 
-  menu.appendChild(editLi);
   menu.appendChild(addLi);
+  menu.appendChild(editLi);
   if (!item.isPlaceholder) menu.appendChild(delLi); // 占位图标不显示删除
   menu.appendChild(exportLi);
 
